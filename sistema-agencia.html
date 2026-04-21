@@ -607,6 +607,25 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
     <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
       <button class="tb-btn tb-back" onclick="voltarResultado()">← Voltar ao Diagnóstico</button>
     </div>
+
+    <!-- BANNER DE PROGRESSO DO FLUXO -->
+    <div style="background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:0;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:#10B981;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+        <span style="font-size:12px;font-weight:600;color:#10B981">Diagnóstico</span>
+      </div>
+      <div style="width:32px;height:2px;background:linear-gradient(90deg,#10B981,#8B5CF6);flex-shrink:0"></div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+        <span style="font-size:12px;font-weight:700;color:#8B5CF6">Entregáveis</span>
+      </div>
+      <div style="width:32px;height:2px;background:var(--border);flex-shrink:0"></div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);color:var(--t3);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+        <span style="font-size:12px;color:var(--t3)">Artes com IA</span>
+      </div>
+    </div>
+
     <div class="f2-header">
       <h2>📦 Seus Entregáveis Prontos</h2>
       <p id="f2-intro">Com base no seu diagnóstico, selecionamos os melhores vídeos, legendas e ofertas para você usar agora.</p>
@@ -636,12 +655,17 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
       <div class="f2-checklist" id="f2-checklist"></div>
     </div>
 
-    <!-- BOTÃO PARA FASE 3 -->
-    <div style="margin-top:24px; text-align:center">
-      <button class="btn-primary" onclick="irFase3()" style="background:linear-gradient(135deg,var(--purple),var(--purple-bg)); border: 1px solid var(--purple)">
-        🎨 Ir para Geração de Artes →
+    <!-- CTA PARA FASE 3 -->
+    <div style="margin-top:32px;padding:28px 24px;background:linear-gradient(135deg,#1a0d2e,#2d1b69);border-radius:14px;border:2px solid #8B5CF6;text-align:center;box-shadow:0 8px 32px rgba(139,92,246,0.2)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#8B5CF6;margin-bottom:10px">🎨 Próximo Passo</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Gere suas artes com IA</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:20px;line-height:1.6">Suba sua logo, escolha as cores da sua agência e gere<br>artes profissionais para feed e stories em segundos.</div>
+      <button onclick="irFase3()" style="background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.3px;box-shadow:0 4px 20px rgba(139,92,246,0.4);transition:all .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+        🎨 Gerar Minhas Artes com IA →
       </button>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:12px">Feed 1080×1080 · Story 1080×1920 · Download direto</div>
     </div>
+
   </div> <!-- Fecha f2-page -->
 </div> <!-- Fecha sec-fase2 -->
 
@@ -650,6 +674,24 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
   <div class="f3-page">
     <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
       <button class="tb-btn tb-back" onclick="voltarFase2()">← Voltar aos Entregáveis</button>
+    </div>
+
+    <!-- BANNER DE PROGRESSO DO FLUXO -->
+    <div style="background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:0;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:#10B981;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+        <span style="font-size:12px;font-weight:600;color:#10B981">Diagnóstico</span>
+      </div>
+      <div style="width:32px;height:2px;background:#10B981;flex-shrink:0"></div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:#10B981;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+        <span style="font-size:12px;font-weight:600;color:#10B981">Entregáveis</span>
+      </div>
+      <div style="width:32px;height:2px;background:linear-gradient(90deg,#10B981,#8B5CF6);flex-shrink:0"></div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:center">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+        <span style="font-size:12px;font-weight:700;color:#8B5CF6">Artes com IA</span>
+      </div>
     </div>
     
     <div class="f2-header">
@@ -1427,9 +1469,14 @@ function renderResultado(d, s, gargalos, checklist) {
       <div class="section-title"><span class="ico">📦</span> Ferramentas Recomendadas</div>
       <div class="planos-grid">${planosHtml}</div>
 
-      <div style="margin-top:28px;padding:16px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;text-align:center">
-        <div style="font-size:13px;color:#374151;margin-bottom:10px"><b>Ver seus entregáveis prontos:</b> vídeos, legendas e ofertas selecionadas para o seu nicho</div>
-        <button onclick="irFase2()" style="background:linear-gradient(135deg,#10B981,#059669);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">📦 Acessar Entregáveis →</button>
+      <div style="margin-top:32px;padding:28px 24px;background:linear-gradient(135deg,#0D1425,#1a2744);border-radius:14px;border:2px solid #10B981;text-align:center;box-shadow:0 8px 32px rgba(16,185,129,0.2)">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#10B981;margin-bottom:10px">✅ Diagnóstico Concluído — Próximo Passo</div>
+        <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Seus entregáveis estão prontos</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:20px;line-height:1.6">Vídeos selecionados para o seu nicho, legendas prontas para copiar,<br>ofertas para postar hoje e artes geradas com IA.</div>
+        <button onclick="irFase2()" style="background:linear-gradient(135deg,#10B981,#059669);color:#fff;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.3px;box-shadow:0 4px 20px rgba(16,185,129,0.4);transition:all .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+          📦 Acessar Meus Entregáveis →
+        </button>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:12px">Vídeos · Legendas · Ofertas · Gerador de Artes com IA</div>
       </div>
 
     </div>
