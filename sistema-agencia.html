@@ -644,17 +644,19 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
     <div class="f2-card">
       <div class="f2-card-title">✅ Plano de Ação — Checklist 30 Dias</div>
       <div class="f2-checklist" id="f2-checklist"></div>
+    </div>
+
     <!-- BOTÃO PARA FASE 3 -->
     <div style="margin-top:24px; text-align:center">
       <button class="btn-primary" onclick="irFase3()" style="background:linear-gradient(135deg,var(--purple),var(--purple-bg)); border: 1px solid var(--purple)">
         🎨 Ir para Geração de Artes →
       </button>
     </div>
-  </div>
-</div>
+  </div> <!-- Fecha f2-page -->
+</div> <!-- Fecha sec-fase2 -->
 
 <!-- ═══════════════════ SEÇÃO 4: FASE 3 — ARTES ═══════════════════ -->
-<div id="sec-fase3">
+<div id="sec-fase3" style="display:none">
   <div class="f3-page">
     <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
       <button class="tb-btn tb-back" onclick="voltarFase2()">← Voltar aos Entregáveis</button>
@@ -1748,7 +1750,8 @@ let logoBase64 = null;
 let templateSelecionado = null;
 
 function irFase2() {
-  popularTeste();
+  // Só usa dados de teste se não houver dados reais do cliente
+  if (!dadosCliente.nome) popularTeste();
   construirHTMLFase2();
 }
 
