@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Auto-save no GitHub",
+  "description": "A cada arquivo salvo no projeto, faz commit e push automático para o GitHub com mensagem descritiva",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*.html",
+      "*.md",
+      "*.py",
+      "*.js",
+      "*.css"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "git add . && git diff --cached --quiet || git commit -m \"update: $(date +'%d/%m/%Y %H:%M') - alteracao automatica\" && git push origin master"
+  }
+}

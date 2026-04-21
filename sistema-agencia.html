@@ -1418,10 +1418,7 @@ function getPlanosHtml(carroChefe, nivel) {
   `).join('');
 }
 
-// Lógica de ajuda para popular fase 2 quando pulamos direto
-function irFase2Logica(nicho, s) {
-   irFase2(); // Chama a função que já existe no seu código original
-}
+// Removida função circular infeliz
 
 function toggleCheck(el) {
   el.classList.toggle('done');
@@ -1530,7 +1527,7 @@ const OFERTAS_BASE = {
   ]
 };
 
-function irFase2() {
+function construirHTMLFase2() {
   const d = dadosCliente;
   const s = scoreData;
   const nicho = d.carroChefe || 'misto';
@@ -1741,24 +1738,40 @@ let logoBase64 = null;
 let templateSelecionado = null;
 
 function irFase2() {
-  popularTeste(); // Garante que temos dados
-  document.querySelectorAll('div[id^="sec-"]').forEach(d => d.style.display = 'none');
+  popularTeste(); // Preenche variáveis globais
+  
+  // Esconde tudo
+  document.getElementById('sec-form').style.display = 'none';
+  document.getElementById('sec-result').style.display = 'none';
   document.getElementById('sec-fase2').style.display = 'block';
-  popularFase2();
+  document.getElementById('sec-fase3').style.display = 'none';
+  
+  // Executa o preenchimento dos vídeos/legendas (Lógica que já existia no arquivo)
+  irFase2Manual(); 
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function irFase3() {
-  popularTeste(); // Garante que temos dados
-  document.querySelectorAll('div[id^="sec-"]').forEach(d => d.style.display = 'none');
+  popularTeste();
+  document.getElementById('sec-form').style.display = 'none';
+  document.getElementById('sec-result').style.display = 'none';
+  document.getElementById('sec-fase2').style.display = 'none';
   document.getElementById('sec-fase3').style.display = 'block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function popularFase2() {
-  const nicho = dadosCliente.carroChefe || 'misto';
+// Versão da função irFase2 que não entra em loop
+function irFase2Manual() {
+  const d = dadosCliente;
   const s = scoreData;
-  irFase2Logica(nicho, s); // Chama a lógica original de preenchimento
+  const nicho = d.carroChefe || 'misto';
+  
+  // Esta parte do código já existia no seu sistema original, estou apenas chamando
+  // Vou garantir que o preenchimento aconteça
+  if(typeof irFase2 === 'function') {
+     // Aqui chamamos apenas a parte de construção do HTML
+     construirHTMLFase2(nicho, s);
+  }
 }
 
 // Botões do Painel Dev chamam essas novas funções
