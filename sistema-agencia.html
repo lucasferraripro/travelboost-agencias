@@ -1749,17 +1749,8 @@ let logoBase64 = null;
 let templateSelecionado = null;
 
 function irFase2() {
-  popularTeste(); // Preenche variáveis globais
-  
-  // Esconde tudo
-  document.getElementById('sec-form').style.display = 'none';
-  document.getElementById('sec-result').style.display = 'none';
-  document.getElementById('sec-fase2').style.display = 'block';
-  document.getElementById('sec-fase3').style.display = 'none';
-  
-  // Executa o preenchimento dos vídeos/legendas (Lógica que já existia no arquivo)
-  irFase2Manual(); 
-  window.scrollTo({top:0,behavior:'smooth'});
+  popularTeste();
+  construirHTMLFase2();
 }
 
 function irFase3() {
@@ -1771,21 +1762,57 @@ function irFase3() {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// Versão da função irFase2 que não entra em loop
-function irFase2Manual() {
-  const d = dadosCliente;
-  const s = scoreData;
-  const nicho = d.carroChefe || 'misto';
-  
-  // Esta parte do código já existia no seu sistema original, estou apenas chamando
-  // Vou garantir que o preenchimento aconteça
-  if(typeof irFase2 === 'function') {
-     // Aqui chamamos apenas a parte de construção do HTML
-     construirHTMLFase2(nicho, s);
-  }
-}
+// ─── PAINEL ADMIN: navega direto para qualquer seção ───
+function adminIr(secao) {
+  const nicho = document.getElementById('admin-nicho')?.value || 'nordeste';
 
-// Botões do Painel Dev chamam essas novas funções
+  // Dados de teste com o nicho selecionado no painel
+  dadosCliente = {
+    nome: 'Mundo Viagens',
+    responsavel: 'Lucas Ferrari',
+    cidade: 'Fortaleza-CE',
+    instagram: '@mundoviagens',
+    carroChefe: nicho,
+    dataAnalise: new Date().toLocaleDateString('pt-BR'),
+    horaAnalise: new Date().toLocaleTimeString('pt-BR'),
+    problemas: ['sem_reels', 'sem_posts']
+  };
+
+  scoreData = {
+    total: 65,
+    presenca: 50,
+    conteudo: 40,
+    vendas: 70,
+    trafego: 30,
+    conversao: 80,
+    raw: { seguidores: 2, posts: 2, orcamentos: 2, carroChefe: nicho }
+  };
+
+  // Atualiza botão ativo
+  ['form','result','fase2','fase3'].forEach(s => {
+    document.getElementById('abtn-' + s)?.classList.toggle('active', s === secao);
+  });
+
+  // Esconde tudo
+  document.getElementById('sec-form').style.display = 'none';
+  document.getElementById('sec-result').style.display = 'none';
+  document.getElementById('sec-fase2').style.display = 'none';
+  document.getElementById('sec-fase3').style.display = 'none';
+
+  if (secao === 'form') {
+    document.getElementById('sec-form').style.display = 'block';
+  } else if (secao === 'result') {
+    gerarResultado(); // gera o HTML do resultado com dados de teste
+    document.getElementById('sec-result').style.display = 'block';
+  } else if (secao === 'fase2') {
+    construirHTMLFase2();
+  } else if (secao === 'fase3') {
+    document.getElementById('sec-fase3').style.display = 'block';
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
+  showToast('🛠️ ' + {form:'Formulário',result:'Resultado',fase2:'Fase 2 — Conteúdo',fase3:'Fase 3 — Artes'}[secao]);
+}
 
 function voltarFase2() {
   document.getElementById('sec-fase3').style.display = 'none';
