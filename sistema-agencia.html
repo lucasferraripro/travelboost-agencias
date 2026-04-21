@@ -535,7 +535,7 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
 
   <!-- ─── BLOCO 5: GARGALOS E DESAFIOS ─── -->
   <div class="card" id="bloco-5" style="display:none">
-    <div class="card-title"><span>5</span> Gargalos e Desafios</div>
+    <div class="card-title"><span>4</span> Gargalos e Desafios</div>
 
     <div class="field">
       <label>Qual seu maior desafio hoje?</label>
@@ -1756,7 +1756,8 @@ function irFase2() {
 }
 
 function irFase3() {
-  popularTeste();
+  // Só usa dados de teste se não houver dados reais do cliente
+  if (!dadosCliente.nome) popularTeste();
   document.getElementById('sec-form').style.display = 'none';
   document.getElementById('sec-result').style.display = 'none';
   document.getElementById('sec-fase2').style.display = 'none';
