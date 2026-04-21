@@ -452,10 +452,11 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
     </div>
 
     <!-- campos ocultos com valores padrão para manter o scoring funcionando -->
-    <input type="hidden" id="f-reels" value="1">
-    <input type="hidden" id="f-stories" value="1">
-    <input type="hidden" id="f-bio" value="1">
-    <input type="hidden" id="f-whatsapp" value="1">
+    <!-- reels/stories/bio/whatsapp/fechamento: 0 = não usa, evita inflar score artificialmente -->
+    <input type="hidden" id="f-reels" value="0">
+    <input type="hidden" id="f-stories" value="0">
+    <input type="hidden" id="f-bio" value="0">
+    <input type="hidden" id="f-whatsapp" value="0">
     <input type="hidden" id="f-fechamento" value="1">
 
     <div class="row2" style="margin-top:8px">
@@ -664,6 +665,9 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
     <div class="f2-header">
       <h2>🎨 Criação de Artes Inteligentes</h2>
       <p>Sua logo + Suas cores + Nosso Design = Arte Profissional em segundos.</p>
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;font-size:12px;color:#F59E0B">
+        ⚠️ <b>Em desenvolvimento</b> — A geração automática de artes estará disponível em breve. Por enquanto, use os templates do pack no Canva.
+      </div>
     </div>
 
     <!-- PASSO 1: LOGO -->
@@ -965,7 +969,7 @@ function irBloco(num) {
   // Progress: blocos ativos são 1, 2, 4, 5 (bloco 3 foi fundido no 2)
   const stepMap = {1:1, 2:2, 3:2, 4:3, 5:4};
   const step = stepMap[num] || 1;
-  ['pl1','pl2','pl3','pl4','pl5'].forEach((id, idx) => {
+  ['pl1','pl2','pl3','pl4'].forEach((id, idx) => {
     document.getElementById(id)?.classList.toggle('active', idx + 1 === step);
   });
   const pct = (step / 4) * 100;
@@ -1859,18 +1863,13 @@ function gerarArtesAPI() {
   btn.style.display = 'none';
   loading.style.display = 'block';
 
-  // SIMULAÇÃO DA API BANANA PRO (15-30s como na doc)
+  // ⚠️ SIMULAÇÃO — integração real com Banana Pro API ainda não implementada
   setTimeout(() => {
     loading.style.display = 'none';
     btn.style.display = 'flex';
-    showToast('🚀 Arte gerada com sucesso e salva no perfil!');
-    
-    // Simulação do download
-    const confirm = window.confirm('Arte gerada! Deseja baixar o arquivo PNG agora?');
-    if (confirm) {
-      showToast('Iniciando download...');
-    }
-  }, 4000); // 4s para demo rápida, mas doc diz 15-30s
+    showToast('⚠️ Modo demonstração — integração com API em breve!');
+    alert('🎨 Demonstração da Fase 3\n\nEsta funcionalidade está em desenvolvimento.\nEm breve você poderá gerar artes profissionais com sua logo e cores diretamente aqui.\n\nPor enquanto, use o Canva com os templates do pack.');
+  }, 2000);
 }
 
 // Print styles
