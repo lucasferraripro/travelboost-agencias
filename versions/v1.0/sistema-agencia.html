@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Canva Viagem — Diagnóstico de Agência</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080D18;--bg2:#0D1425;--bg3:#111827;
+  --glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --green:#10B981;--green2:#059669;--green-bg:rgba(16,185,129,0.1);
+  --amber:#F59E0B;--amber-bg:rgba(245,158,11,0.1);
+  --red:#EF4444;--red-bg:rgba(239,68,68,0.1);
+  --blue:#3B82F6;--blue-bg:rgba(59,130,246,0.1);
+  --purple:#8B5CF6;--purple-bg:rgba(139,92,246,0.1);
+  --t1:#F9FAFB;--t2:#9CA3AF;--t3:#6B7280;
+  --radius:14px;--radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+.page{max-width:740px;margin:0 auto;padding:24px 16px 80px}
+
+/* LOGO */
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:700;color:var(--t1)}
+.logo-sub{font-size:11px;color:var(--t2);margin-top:1px}
+
+/* HERO */
+.hero{text-align:center;padding:32px 0 24px}
+.hero h1{font-size:26px;font-weight:800;line-height:1.25;margin-bottom:10px}
+.hero h1 span{background:linear-gradient(135deg,var(--green),#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:14px;color:var(--t2);line-height:1.6;max-width:500px;margin:0 auto}
+
+/* PROGRESS */
+.progress-bar{background:var(--glass);border:1px solid var(--border);border-radius:50px;height:6px;margin-bottom:28px;overflow:hidden}
+.progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--green),#34D399);transition:width .5s ease}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:6px}
+.progress-label{font-size:11px;color:var(--t3);font-weight:500}
+.progress-label.active{color:var(--green)}
+
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;backdrop-filter:blur(12px)}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title span{background:var(--green-bg);color:var(--green);width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+
+/* FIELDS */
+.field{margin-bottom:14px}
+.field label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight:500}
+.field input,.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;color:var(--t1);font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green)}
+.field select option{background:var(--bg3);color:var(--t1)}
+.field textarea{resize:vertical;min-height:72px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.row2{grid-template-columns:1fr}}
+
+/* CHECKBOXES */
+.checks{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.check-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t1);cursor:pointer;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);transition:all .15s;user-select:none;background:transparent}
+.check-item:hover{border-color:var(--green);background:var(--green-bg)}
+.check-item input[type="checkbox"]{width:17px!important;height:17px!important;min-width:17px!important;cursor:pointer!important;accent-color:var(--green)!important;flex-shrink:0!important;margin:0!important}
+.check-item.checked{border-color:var(--green);background:var(--green-bg)}
+
+/* TAGS SELECTOR */
+.tags-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.tag-btn{padding:6px 14px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.tag-btn:hover{border-color:var(--green);color:var(--t1)}
+.tag-btn.selected{border-color:var(--green);background:var(--green-bg);color:var(--green);font-weight:600}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:var(--radius);border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;cursor:pointer;margin-top:12px;transition:opacity .2s,transform .1s;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{opacity:.9}
+.btn-primary:active{transform:scale(.99)}
+.btn-secondary{padding:10px 18px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+
+/* INFO BOX */
+.info-box{background:var(--blue-bg);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.6}
+.info-box b{color:var(--t1)}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block}
+
+/* ═══ RESULTADO ═══ */
+#sec-result{background:#F0F2F5;color:#1A1A2E;min-height:100vh;padding:32px 16px 80px;display:none}
+.doc{max-width:760px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 12px 60px rgba(0,0,0,.12);overflow:hidden;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.toolbar{max-width:760px;margin:0 auto 16px;display:flex;gap:8px;flex-wrap:wrap}
+.tb-btn{padding:9px 16px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;font-family:'Inter',sans-serif}
+.tb-back{background:#fff;color:#6B7280;border:1px solid #E5E7EB}.tb-back:hover{color:#10B981;border-color:#10B981}
+.tb-pdf{background:#EF4444;color:#fff}.tb-pdf:hover{opacity:.9}
+.tb-wa{background:#25D366;color:#fff}.tb-wa:hover{background:#1fba59}
+.tb-copy{background:#3B82F6;color:#fff}.tb-copy:hover{background:#2563EB}
+.tb-fase2{background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff}.tb-fase2:hover{opacity:.9}
+
+/* DOC HEADER */
+.doc-header{background:linear-gradient(135deg,#0D1425,#1a2744);padding:32px 32px 24px;color:#fff}
+.doc-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#10B981;margin-bottom:10px}
+.doc-title{font-size:22px;font-weight:800;margin-bottom:4px}
+.doc-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px}
+.doc-meta{display:flex;gap:16px;flex-wrap:wrap}
+.doc-meta-item{font-size:12px;color:rgba(255,255,255,0.6)}
+.doc-meta-item b{color:#fff}
+
+/* SCORE SECTION */
+.score-block{background:linear-gradient(135deg,#f8fffe,#f0faf5);border-bottom:3px solid #10B981;padding:28px 32px}
+.score-main{display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.score-circle{width:90px;height:90px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-weight:800}
+.score-number{font-size:30px;line-height:1}
+.score-max{font-size:11px;opacity:.7;margin-top:2px}
+.score-info h2{font-size:19px;font-weight:800;color:#1A1A2E;margin-bottom:4px}
+.score-info p{font-size:13px;color:#4B5563;line-height:1.5}
+.score-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:500px){.score-strip{grid-template-columns:repeat(2,1fr)}}
+.score-dim{background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #E5E7EB;text-align:center}
+.score-dim-val{font-size:18px;font-weight:800;margin-bottom:2px}
+.score-dim-label{font-size:10px;color:#6B7280;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+
+/* DOC BODY */
+.doc-body{padding:28px 32px}
+.section-title{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6B7280;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #F3F4F6;display:flex;align-items:center;gap:8px}
+.section-title .ico{font-size:16px}
+
+/* GARGALO */
+.gargalo-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px}
+.gargalo-item.red{background:#FEF2F2;border:1px solid #FECACA}
+.gargalo-item.amber{background:#FFFBEB;border:1px solid #FDE68A}
+.gargalo-item.green{background:#F0FDF4;border:1px solid #BBF7D0}
+.gargalo-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.gargalo-dot.red{background:#EF4444}
+.gargalo-dot.amber{background:#F59E0B}
+.gargalo-dot.green{background:#10B981}
+.gargalo-text{font-size:13px;color:#374151;line-height:1.5}
+.gargalo-text b{color:#1A1A2E}
+
+/* CHECKLIST */
+.check-phase{margin-bottom:20px}
+.check-phase-title{font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.check-phase-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:50px;text-transform:uppercase;letter-spacing:.5px}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid #E5E7EB;margin-bottom:6px;background:#fff;cursor:pointer;transition:all .15s}
+.cl-item:hover{border-color:#10B981;background:#F0FDF4}
+.cl-item.done{background:#F0FDF4;border-color:#BBF7D0;text-decoration:line-through;color:#6B7280}
+.cl-check{width:18px;height:18px;border-radius:5px;border:2px solid #D1D5DB;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cl-item.done .cl-check{background:#10B981;border-color:#10B981;color:#fff}
+.cl-text{font-size:13px;color:#374151;line-height:1.4}
+
+/* PLANOS */
+.planos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.planos-grid{grid-template-columns:1fr}}
+.plano-card{border-radius:10px;padding:16px;border:2px solid transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+.plano-card:hover{transform:translateY(-2px)}
+.plano-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.plano-card .preco{font-size:20px;font-weight:800;margin-bottom:6px}
+.plano-card p{font-size:12px;opacity:.8;line-height:1.4}
+
+/* ═══ FASE 2 ═══ */
+#sec-fase2{display:none;padding:32px 16px 80px;background:var(--bg);min-height:100vh}
+.f2-page{max-width:740px;margin:0 auto}
+.f2-header{text-align:center;margin-bottom:32px}
+.f2-header h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.f2-header p{font-size:13px;color:var(--t2);line-height:1.6}
+
+.f2-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.f2-card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* VÍDEOS */
+.video-grid{display:flex;flex-direction:column;gap:10px}
+.video-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px}
+.video-num{width:28px;height:28px;border-radius:7px;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.video-info{flex:1}
+.video-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.video-meta{font-size:11px;color:var(--t3)}
+.video-badge{display:inline-flex;padding:2px 8px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.badge-praia{background:var(--blue-bg);color:var(--blue)}
+.badge-intl{background:var(--purple-bg);color:var(--purple)}
+.badge-mkt{background:var(--amber-bg);color:var(--amber)}
+.badge-aventura{background:var(--green-bg);color:var(--green)}
+
+/* LEGENDAS */
+.legenda-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.legenda-dest{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.legenda-text{font-size:13px;color:var(--t2);line-height:1.6;white-space:pre-wrap}
+.legenda-copy{background:transparent;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:11px;color:var(--t2);cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;transition:all .2s}
+.legenda-copy:hover{border-color:var(--green);color:var(--green)}
+
+/* OFERTAS */
+.oferta-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.oferta-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.oferta-text{font-size:13px;color:var(--t2);line-height:1.6;white-space:pre-wrap;margin-bottom:8px}
+.oferta-actions{display:flex;gap:8px;flex-wrap:wrap}
+.oferta-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.oferta-btn:hover{border-color:var(--green);color:var(--green)}
+.oferta-btn.full{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+
+/* CHECKLIST FASE 2 */
+.f2-checklist{display:flex;flex-direction:column;gap:8px}
+.f2-check{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .15s}
+.f2-check:hover{border-color:var(--green);background:var(--green-bg)}
+.f2-check.done{border-color:var(--green);background:var(--green-bg);opacity:.7}
+.f2-check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.f2-check.done .f2-check-box{background:var(--green);border-color:var(--green);color:#fff}
+.f2-check-text{flex:1}
+.f2-check-label{font-size:13px;color:var(--t1);font-weight:500;margin-bottom:1px}
+.f2-check-desc{font-size:11px;color:var(--t3);line-height:1.4}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;border:1px solid var(--green);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{opacity:1}
+
+/* SCORE COLORS */
+.score-red .score-circle{background:#FEF2F2;color:#EF4444;border:3px solid #EF4444}
+.score-amber .score-circle{background:#FFFBEB;color:#F59E0B;border:3px solid #F59E0B}
+.score-blue .score-circle{background:#EFF6FF;color:#3B82F6;border:3px solid #3B82F6}
+.score-green .score-circle{background:#F0FDF4;color:#10B981;border:3px solid #10B981}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SEÇÃO 1: FORMULÁRIO ═══════════════════ -->
+<div id="sec-form" class="section active">
+<div class="page">
+
+  <div class="logo">
+    <div class="logo-icon">✈️</div>
+    <div>
+      <div class="logo-text">Canva Viagem</div>
+      <div class="logo-sub">Diagnóstico de Agência</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Descubra onde sua agência <span>pode crescer</span></h1>
+    <p>Responda o formulário abaixo. Vamos identificar seus gargalos e entregar um plano de ação personalizado com conteúdo pronto para postar.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-labels">
+    <span class="progress-label active" id="pl1">① Dados</span>
+    <span class="progress-label" id="pl2">② Presença</span>
+    <span class="progress-label" id="pl3">③ Vendas</span>
+    <span class="progress-label" id="pl4">④ Pacotes</span>
+    <span class="progress-label" id="pl5">⑤ Gargalos</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+
+  <form id="main-form">
+
+  <!-- ─── BLOCO 1: DADOS DA AGÊNCIA ─── -->
+  <div class="card" id="bloco-1">
+    <div class="card-title"><span>1</span> Dados da Agência</div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Nome da agência *</label>
+        <input type="text" id="f-nome" placeholder="Ex: Viagens & Sonhos" required>
+      </div>
+      <div class="field">
+        <label>Nome do responsável *</label>
+        <input type="text" id="f-responsavel" placeholder="Ex: Maria Silva" required>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Cidade / Estado *</label>
+        <input type="text" id="f-cidade" placeholder="Ex: Fortaleza - CE" required>
+      </div>
+      <div class="field">
+        <label>@ Instagram</label>
+        <input type="text" id="f-instagram" placeholder="@suaagencia">
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Tempo de mercado</label>
+        <select id="f-tempo">
+          <option value="">Selecione</option>
+          <option value="1">Menos de 1 ano</option>
+          <option value="2">1 a 3 anos</option>
+          <option value="3">3 a 5 anos</option>
+          <option value="4">Mais de 5 anos</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tipo de agência</label>
+        <select id="f-tipo-agencia">
+          <option value="">Selecione</option>
+          <option value="autonoma">Agente autônoma / Freelancer</option>
+          <option value="pequena">Pequena agência (até 3 pessoas)</option>
+          <option value="media">Agência média (4-10 pessoas)</option>
+          <option value="franquia">Franquia</option>
+          <option value="consolidadora">Consolidadora</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="text-align:right;margin-top:8px">
+      <button type="button" class="btn-secondary" onclick="irBloco(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ─── BLOCO 2: PRESENÇA DIGITAL ─── -->
+  <div class="card" id="bloco-2" style="display:none">
+    <div class="card-title"><span>2</span> Presença Digital</div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Seguidores no Instagram</label>
+        <select id="f-seguidores">
+          <option value="0">Não tenho / Menos de 500</option>
+          <option value="1">500 a 1.000</option>
+          <option value="2">1.000 a 5.000</option>
+          <option value="3">5.000 a 15.000</option>
+          <option value="4">Mais de 15.000</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Frequência de posts</label>
+        <select id="f-posts">
+          <option value="0">Não posta / Raramente</option>
+          <option value="1">1 a 2x por semana</option>
+          <option value="2">3 a 5x por semana</option>
+          <option value="3">Todos os dias</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Usa Reels / Vídeos?</label>
+        <select id="f-reels">
+          <option value="0">Ainda não uso</option>
+          <option value="1">Raramente</option>
+          <option value="2">Sim, regularmente</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Usa Stories?</label>
+        <select id="f-stories">
+          <option value="0">Não usa</option>
+          <option value="1">Às vezes</option>
+          <option value="2">Sim, todo dia</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Tem site ou landing page?</label>
+        <select id="f-site">
+          <option value="0">Não tenho</option>
+          <option value="1">Tenho mas é fraco</option>
+          <option value="2">Sim, funcional</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Bio do Instagram otimizada?</label>
+        <select id="f-bio">
+          <option value="0">Não / Não sei</option>
+          <option value="1">Básica (sem CTA)</option>
+          <option value="2">Sim (com CTA e link)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tem depoimentos de clientes?</label>
+      <select id="f-depoimentos">
+        <option value="0">Não tenho</option>
+        <option value="1">Poucos (1-3)</option>
+        <option value="2">Vários (4+)</option>
+        <option value="3">Muitos + em vídeo</option>
+      </select>
+    </div>
+
+    <div class="row2" style="margin-top:8px">
+      <button type="button" class="btn-secondary" onclick="irBloco(1)">← Voltar</button>
+      <button type="button" class="btn-secondary" onclick="irBloco(3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ─── BLOCO 3: VENDAS E TRÁFEGO ─── -->
+  <div class="card" id="bloco-3" style="display:none">
+    <div class="card-title"><span>3</span> Vendas e Tráfego</div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Investe em anúncio pago?</label>
+        <select id="f-anuncio">
+          <option value="0">Não invisto</option>
+          <option value="1">Pouco (até R$500/mês)</option>
+          <option value="2">Médio (R$500-2.000/mês)</option>
+          <option value="3">Alto (acima de R$2.000/mês)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>De onde vêm seus clientes?</label>
+        <select id="f-origem">
+          <option value="0">Indicação / boca a boca</option>
+          <option value="1">Instagram orgânico</option>
+          <option value="2">Tráfego pago</option>
+          <option value="3">Misto (orgânico + pago)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Orçamentos por semana</label>
+        <select id="f-orcamentos">
+          <option value="0">0 a 3</option>
+          <option value="1">4 a 10</option>
+          <option value="2">11 a 20</option>
+          <option value="3">Mais de 20</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ticket médio das viagens</label>
+        <select id="f-ticket">
+          <option value="0">Até R$3.000</option>
+          <option value="1">R$3.000 a R$8.000</option>
+          <option value="2">R$8.000 a R$20.000</option>
+          <option value="3">Acima de R$20.000</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Lista de WhatsApp de clientes?</label>
+      <select id="f-whatsapp">
+        <option value="0">Não tenho lista organizada</option>
+        <option value="1">Sim, pequena (até 50 contatos)</option>
+        <option value="2">Sim, média (50 a 200)</option>
+        <option value="3">Sim, grande (200+)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Taxa de fechamento (de quem pede orçamento, quantos fecham?)</label>
+      <select id="f-fechamento">
+        <option value="0">Menos de 10%</option>
+        <option value="1">10% a 25%</option>
+        <option value="2">25% a 50%</option>
+        <option value="3">Mais de 50%</option>
+      </select>
+    </div>
+
+    <div class="row2" style="margin-top:8px">
+      <button type="button" class="btn-secondary" onclick="irBloco(2)">← Voltar</button>
+      <button type="button" class="btn-secondary" onclick="irBloco(4)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ─── BLOCO 4: PACOTES E NICHO ─── -->
+  <div class="card" id="bloco-4" style="display:none">
+    <div class="card-title"><span>4</span> Pacotes e Nicho</div>
+
+    <div class="field">
+      <label>Qual é o seu carro-chefe? (o que mais vende)</label>
+      <select id="f-carro-chefe">
+        <option value="">Selecione</option>
+        <option value="nordeste">Praia Nordeste (Natal, Maceió, Fortaleza...)</option>
+        <option value="sul">Praia Sul/Sudeste (Floripa, Rio, Búzios...)</option>
+        <option value="internacional">Internacional (Europa, EUA, Cancún...)</option>
+        <option value="cruzeiro">Cruzeiros</option>
+        <option value="aventura">Ecoturismo / Aventura</option>
+        <option value="religioso">Turismo religioso</option>
+        <option value="misto">Misto / Vários</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>O que você quer vender MAIS nos próximos meses?</label>
+      <select id="f-quer-vender">
+        <option value="">Selecione</option>
+        <option value="nordeste">Mais pacotes nacionais de praia</option>
+        <option value="internacional">Mais pacotes internacionais</option>
+        <option value="cruzeiro">Mais cruzeiros</option>
+        <option value="premium">Viagens premium / alto ticket</option>
+        <option value="grupo">Pacotes para grupos</option>
+        <option value="melua">Lua de mel / Romance</option>
+        <option value="familia">Viagens em família</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Tipos de pacote que você oferece (marque todos)</label>
+      <div class="checks" id="checks-pacotes">
+        <label class="check-item"><input type="checkbox" value="fechado"> Pacotes fechados (all-inclusive, resort)</label>
+        <label class="check-item"><input type="checkbox" value="personalizado"> Pacotes personalizados / sob medida</label>
+        <label class="check-item"><input type="checkbox" value="grupo"> Grupos e excursões</label>
+        <label class="check-item"><input type="checkbox" value="melua"> Lua de mel / Aniversário</label>
+        <label class="check-item"><input type="checkbox" value="familia"> Viagens em família</label>
+        <label class="check-item"><input type="checkbox" value="corporativo"> Viagens corporativas</label>
+        <label class="check-item"><input type="checkbox" value="cruzeiro"> Cruzeiros</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Destinos nacionais que você mais vende (marque até 3)</label>
+      <div class="tags-grid" id="tags-nac">
+        <button type="button" class="tag-btn" data-val="maceio">Maceió</button>
+        <button type="button" class="tag-btn" data-val="natal">Natal</button>
+        <button type="button" class="tag-btn" data-val="fortaleza">Fortaleza</button>
+        <button type="button" class="tag-btn" data-val="porto-galinhas">Porto de Galinhas</button>
+        <button type="button" class="tag-btn" data-val="salvador">Salvador</button>
+        <button type="button" class="tag-btn" data-val="floripa">Florianópolis</button>
+        <button type="button" class="tag-btn" data-val="rio">Rio de Janeiro</button>
+        <button type="button" class="tag-btn" data-val="gramado">Gramado</button>
+        <button type="button" class="tag-btn" data-val="foz">Foz do Iguaçu</button>
+        <button type="button" class="tag-btn" data-val="joao-pessoa">João Pessoa</button>
+        <button type="button" class="tag-btn" data-val="recife">Recife</button>
+        <button type="button" class="tag-btn" data-val="jeri">Jericoacoara</button>
+        <button type="button" class="tag-btn" data-val="bonito">Bonito</button>
+        <button type="button" class="tag-btn" data-val="balneario">Balneário Camboriú</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Destinos internacionais que você mais vende (marque até 3)</label>
+      <div class="tags-grid" id="tags-intl">
+        <button type="button" class="tag-btn" data-val="orlando">Orlando</button>
+        <button type="button" class="tag-btn" data-val="cancun">Cancún</button>
+        <button type="button" class="tag-btn" data-val="buenos-aires">Buenos Aires</button>
+        <button type="button" class="tag-btn" data-val="punta-cana">Punta Cana</button>
+        <button type="button" class="tag-btn" data-val="miami">Miami</button>
+        <button type="button" class="tag-btn" data-val="lisboa">Lisboa</button>
+        <button type="button" class="tag-btn" data-val="paris">Paris</button>
+        <button type="button" class="tag-btn" data-val="dubai">Dubai</button>
+        <button type="button" class="tag-btn" data-val="bali">Bali</button>
+        <button type="button" class="tag-btn" data-val="tailandia">Tailândia</button>
+        <button type="button" class="tag-btn" data-val="nova-york">Nova York</button>
+        <button type="button" class="tag-btn" data-val="santiago">Santiago</button>
+      </div>
+    </div>
+
+    <div class="row2" style="margin-top:8px">
+      <button type="button" class="btn-secondary" onclick="irBloco(3)">← Voltar</button>
+      <button type="button" class="btn-secondary" onclick="irBloco(5)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ─── BLOCO 5: GARGALOS E DESAFIOS ─── -->
+  <div class="card" id="bloco-5" style="display:none">
+    <div class="card-title"><span>5</span> Gargalos e Desafios</div>
+
+    <div class="field">
+      <label>Qual seu maior desafio hoje?</label>
+      <select id="f-desafio">
+        <option value="tempo">Falta de tempo para criar conteúdo</option>
+        <option value="clientes">Não consigo atrair clientes novos</option>
+        <option value="conversao">Recebo mensagens mas não consigo fechar</option>
+        <option value="escala">Quero escalar mas não sei como</option>
+        <option value="concorrencia">Concorrência muito forte / guerra de preço</option>
+        <option value="consistencia">Não consigo ser consistente nas redes</option>
+        <option value="anuncio">Já invisto em anúncio mas não converte</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>O que você observa de problema no seu perfil? (marque todos)</label>
+      <div class="checks" id="checks-problemas">
+        <label class="check-item"><input type="checkbox" value="sem_reels"> Não usa Reels / vídeos de venda</label>
+        <label class="check-item"><input type="checkbox" value="sem_posts"> Perfil parado ou pouco conteúdo</label>
+        <label class="check-item"><input type="checkbox" value="sem_depo"> Sem depoimentos de clientes</label>
+        <label class="check-item"><input type="checkbox" value="sem_cta"> Bio sem chamada para ação (CTA)</label>
+        <label class="check-item"><input type="checkbox" value="sem_site"> Sem site ou landing page</label>
+        <label class="check-item"><input type="checkbox" value="sem_id_visual"> Feed sem identidade visual clara</label>
+        <label class="check-item"><input type="checkbox" value="sem_stories"> Não usa Stories ativamente</label>
+        <label class="check-item"><input type="checkbox" value="sem_anuncio"> Nunca fez anúncio pago</label>
+        <label class="check-item"><input type="checkbox" value="sem_oferta"> Não tem oferta clara para divulgar</label>
+        <label class="check-item"><input type="checkbox" value="sem_whats"> Sem lista de WhatsApp organizada</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>O que o cliente costuma falar quando não compra?</label>
+      <select id="f-objecao">
+        <option value="preco">Achou caro / foi no concorrente mais barato</option>
+        <option value="tempo">Disse que vai pensar e sumiu</option>
+        <option value="confianca">Não conhecia a agência / sem confiança</option>
+        <option value="urgencia">Não tinha urgência / adiou a viagem</option>
+        <option value="nao_sei">Não sei / raramente recebo feedback</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Observações livres (dores, contexto extra, o que o cliente te disse)</label>
+      <textarea id="f-obs" placeholder="Ex: minha concorrente está crescendo muito, clientes somem depois do orçamento, não tenho tempo de postar..."></textarea>
+    </div>
+
+    <div class="info-box">
+      <b>Quase lá!</b> Com base nas suas respostas, vamos gerar um diagnóstico personalizado com score real, gargalos identificados e plano de ação com conteúdo pronto.
+    </div>
+
+    <div class="row2" style="margin-top:4px">
+      <button type="button" class="btn-secondary" onclick="irBloco(4)">← Voltar</button>
+      <button type="button" class="btn-primary" onclick="gerarDiagnostico()" style="margin-top:0">
+        <span>🔍</span> Gerar Diagnóstico
+      </button>
+    </div>
+  </div>
+
+  </form>
+</div>
+</div>
+
+<!-- ═══════════════════ SEÇÃO 2: RESULTADO ═══════════════════ -->
+<div id="sec-result">
+  <div class="toolbar">
+    <button class="tb-btn tb-back" onclick="voltarForm()">← Novo diagnóstico</button>
+    <button class="tb-btn tb-pdf" onclick="imprimirPDF()">📄 Baixar PDF</button>
+    <button class="tb-btn tb-wa" onclick="copiarWhats()">💬 Resumo WhatsApp</button>
+    <button class="tb-btn tb-fase2" onclick="irFase2()">📦 Ver Entregáveis →</button>
+  </div>
+  <div class="doc" id="doc-result">
+    <!-- Preenchido por JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════ SEÇÃO 3: FASE 2 — ENTREGÁVEIS ═══════════════════ -->
+<div id="sec-fase2">
+  <div class="f2-page">
+    <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
+      <button class="tb-btn tb-back" onclick="voltarResultado()">← Voltar ao Diagnóstico</button>
+    </div>
+    <div class="f2-header">
+      <h2>📦 Seus Entregáveis Prontos</h2>
+      <p id="f2-intro">Com base no seu diagnóstico, selecionamos os melhores vídeos, legendas e ofertas para você usar agora.</p>
+    </div>
+
+    <!-- VÍDEOS RECOMENDADOS -->
+    <div class="f2-card">
+      <div class="f2-card-title">🎬 Vídeos Recomendados do Pack de 150</div>
+      <div class="video-grid" id="f2-videos"></div>
+    </div>
+
+    <!-- LEGENDAS PRONTAS -->
+    <div class="f2-card">
+      <div class="f2-card-title">✍️ Legendas Prontas para Postar</div>
+      <div id="f2-legendas"></div>
+    </div>
+
+    <!-- SUGESTÕES DE OFERTA -->
+    <div class="f2-card">
+      <div class="f2-card-title">💰 Sugestões de Oferta para Publicar</div>
+      <div id="f2-ofertas"></div>
+    </div>
+
+    <!-- CHECKLIST 30 DIAS -->
+    <div class="f2-card">
+      <div class="f2-card-title">✅ Plano de Ação — Checklist 30 Dias</div>
+      <div class="f2-checklist" id="f2-checklist"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DADOS GLOBAIS
+// ═══════════════════════════════════════════════════
+let dadosCliente = {};
+let scoreData = {};
+
+// Tags selecionadas
+const tagsNac = new Set();
+const tagsIntl = new Set();
+
+// Init tags
+document.querySelectorAll('#tags-nac .tag-btn').forEach(btn => {
+  btn.addEventListener('click', () => toggleTag(btn, tagsNac, 3, '#tags-nac'));
+});
+document.querySelectorAll('#tags-intl .tag-btn').forEach(btn => {
+  btn.addEventListener('click', () => toggleTag(btn, tagsIntl, 3, '#tags-intl'));
+});
+
+function toggleTag(btn, set, max, groupId) {
+  const val = btn.dataset.val;
+  if (set.has(val)) {
+    set.delete(val);
+    btn.classList.remove('selected');
+  } else if (set.size < max) {
+    set.add(val);
+    btn.classList.add('selected');
+  } else {
+    showToast(`Selecione até ${max} destinos`);
+  }
+}
+
+// Check items toggle
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    if (e.target.type !== 'checkbox') {
+      const cb = item.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+    }
+    item.classList.toggle('checked', item.querySelector('input').checked);
+  });
+});
+
+// ═══ NAVEGAÇÃO DE BLOCOS ═══
+function irBloco(num) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`bloco-${i}`);
+    if (el) el.style.display = i === num ? 'block' : 'none';
+  }
+  // Update progress labels
+  ['pl1','pl2','pl3','pl4','pl5'].forEach((id, idx) => {
+    document.getElementById(id)?.classList.toggle('active', idx + 1 === num);
+  });
+  const pct = (num / 5) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ═══════════════════════════════════════════════════
+// SCORING ENGINE
+// ═══════════════════════════════════════════════════
+function calcularScore() {
+  const v = {
+    seguidores: +document.getElementById('f-seguidores').value,
+    posts: +document.getElementById('f-posts').value,
+    reels: +document.getElementById('f-reels').value,
+    stories: +document.getElementById('f-stories').value,
+    site: +document.getElementById('f-site').value,
+    bio: +document.getElementById('f-bio').value,
+    depoimentos: +document.getElementById('f-depoimentos').value,
+    anuncio: +document.getElementById('f-anuncio').value,
+    origem: +document.getElementById('f-origem').value,
+    orcamentos: +document.getElementById('f-orcamentos').value,
+    ticket: +document.getElementById('f-ticket').value,
+    whatsapp: +document.getElementById('f-whatsapp').value,
+    fechamento: +document.getElementById('f-fechamento').value,
+    tempo: +document.getElementById('f-tempo').value || 1,
+  };
+
+  // PRESENÇA DIGITAL (0-20)
+  const presenca = Math.min(20,
+    (v.seguidores / 4 * 5) +   // 0-5
+    (v.posts / 3 * 5) +         // 0-5
+    (v.bio / 2 * 4) +           // 0-4
+    (v.site / 2 * 3) +          // 0-3
+    (v.depoimentos / 3 * 3)     // 0-3
+  );
+
+  // CONTEÚDO (0-20)
+  const conteudo = Math.min(20,
+    (v.reels / 2 * 8) +         // 0-8
+    (v.stories / 2 * 6) +       // 0-6
+    (v.posts / 3 * 6)           // 0-6
+  );
+
+  // VENDAS (0-25)
+  const vendas = Math.min(25,
+    (v.orcamentos / 3 * 10) +   // 0-10
+    (v.ticket / 3 * 8) +        // 0-8
+    (v.fechamento / 3 * 7)      // 0-7
+  );
+
+  // TRÁFEGO (0-20)
+  const trafego = Math.min(20,
+    (v.anuncio / 3 * 10) +      // 0-10
+    (v.origem / 3 * 6) +        // 0-6
+    (v.whatsapp / 3 * 4)        // 0-4
+  );
+
+  // CONVERSÃO (0-15)
+  const conversao = Math.min(15,
+    (v.fechamento / 3 * 8) +    // 0-8
+    (v.depoimentos / 3 * 4) +   // 0-4
+    (v.site / 2 * 3)            // 0-3
+  );
+
+  const total = Math.round(presenca + conteudo + vendas + trafego + conversao);
+
+  return {
+    total,
+    presenca: Math.round(presenca * 5),   // 0-100
+    conteudo: Math.round(conteudo * 5),
+    vendas: Math.round(vendas * 4),
+    trafego: Math.round(trafego * 5),
+    conversao: Math.round(conversao * 6.67),
+    raw: v
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// HASH PARA VARIAÇÃO DE RESPOSTAS
+// ═══════════════════════════════════════════════════
+function hashVariation(seed, max) {
+  let h = 0;
+  const str = String(seed) + new Date().getDate(); // muda por dia
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h) % max;
+}
+
+// ═══════════════════════════════════════════════════
+// GARGALOS DINÂMICOS
+// ═══════════════════════════════════════════════════
+function gerarGargalos(score, raw, problemas) {
+  const gargalos = [];
+
+  // CRÍTICOS (vermelho)
+  if (score.conteudo < 40) {
+    const opts = [
+      { title: 'Zero constância de conteúdo', desc: 'Sua agência praticamente não aparece nas redes. Sem presença regular, o algoritmo te ignora — e potenciais clientes também.' },
+      { title: 'Ausência de vídeos de venda', desc: 'Reels são o formato com maior alcance orgânico no Instagram. Sem vídeos, sua agência perde visibilidade gratuita todos os dias.' },
+      { title: 'Conteúdo irregular afasta clientes', desc: 'Perfis que ficam dias sem postar perdem relevância. Um cliente que visita e vê o último post com 2 semanas dificilmente vai entrar em contato.' }
+    ];
+    gargalos.push({ type: 'red', ...opts[hashVariation(score.total + 1, opts.length)] });
+  }
+
+  if (score.trafego < 30) {
+    const opts = [
+      { title: 'Dependência total de indicação', desc: 'Quando os clientes param de indicar, o faturamento cai. Você precisa de um canal previsível que traga orçamentos independente da boa vontade de terceiros.' },
+      { title: 'Sem canal de aquisição ativo', desc: 'Sua agência não tem nenhum mecanismo de busca ativa de clientes. Todo lead que chega é passivo — e passivo é frágil.' },
+      { title: 'Invisibilidade para novos públicos', desc: 'Sem tráfego pago ou orgânico consistente, você só alcança quem já te conhece. Novos clientes simplesmente não te encontram.' }
+    ];
+    gargalos.push({ type: 'red', ...opts[hashVariation(score.total + 2, opts.length)] });
+  }
+
+  if (problemas.includes('sem_anuncio') && raw.orcamentos < 1) {
+    const opts = [
+      { title: 'Sem anúncios = sem escala', desc: 'Orgânico alimenta, tráfego pago escala. Agências que não anunciam ficam limitadas ao alcance natural do algoritmo, que cai todo ano.' },
+      { title: 'Crescimento bloqueado sem mídia paga', desc: 'O alcance orgânico do Instagram é de 3-5% dos seguidores. Com anúncio, você multiplica isso por 10 pagando menos de R$20/dia.' }
+    ];
+    gargalos.push({ type: 'red', ...opts[hashVariation(score.total + 3, opts.length)] });
+  }
+
+  // MODERADOS (amarelo)
+  if (score.conversao < 50) {
+    const opts = [
+      { title: 'Taxa de fechamento abaixo do potencial', desc: 'Receber orçamento e não fechar é dinheiro na mesa. Pequenas melhorias no processo de follow-up podem dobrar seu faturamento sem novos leads.' },
+      { title: 'Objeções não tratadas no funil', desc: 'Clientes somem após orçamento porque a proposta não cria urgência, não mostra prova social e não remove o risco da decisão.' },
+      { title: 'Processo de venda sem follow-up', desc: 'A maioria das vendas acontece no 2º ou 3º contato. Se você não faz follow-up estruturado, está deixando 60% das vendas na mesa.' }
+    ];
+    gargalos.push({ type: 'amber', ...opts[hashVariation(score.total + 4, opts.length)] });
+  }
+
+  if (raw.depoimentos < 1 || problemas.includes('sem_depo')) {
+    const opts = [
+      { title: 'Falta de prova social visível', desc: 'Agência de viagens vende confiança antes de vender pacote. Sem depoimentos, prints ou vídeos de clientes, o visitante não tem razão para confiar.' },
+      { title: 'Ausência de social proof prejudica conversão', desc: 'Pesquisas mostram que 88% das pessoas confiam em avaliações online tanto quanto em recomendações pessoais. Depoimentos são vendas automáticas.' }
+    ];
+    gargalos.push({ type: 'amber', ...opts[hashVariation(score.total + 5, opts.length)] });
+  }
+
+  if (raw.site < 1 || problemas.includes('sem_site')) {
+    const opts = [
+      { title: 'Sem landing page para capturar leads', desc: 'Link na bio levando para quê? Sem uma página profissional que mostre seus pacotes, você perde toda a curiosidade gerada pelos posts.' },
+      { title: 'Ausência de site reduz credibilidade', desc: 'Cliente pesquisa agência no Google antes de fechar. Sem site, sua agência simplesmente não existe para quem busca fora do Instagram.' }
+    ];
+    gargalos.push({ type: 'amber', ...opts[hashVariation(score.total + 6, opts.length)] });
+  }
+
+  // MELHORIAS (verde)
+  if (score.presenca > 40 && score.conteudo < 60) {
+    gargalos.push({ type: 'green', title: 'Presença existe, conteúdo precisa evoluir', desc: 'Você já tem base de seguidores. O próximo passo é aumentar a qualidade e frequência — especialmente vídeos curtos que geram alcance.' });
+  }
+  if (score.vendas > 50 && score.trafego < 50) {
+    gargalos.push({ type: 'green', title: 'Boa conversão, falta volume de leads', desc: 'Você fecha bem quem entra em contato. O problema é quantidade. Com anúncio ou conteúdo viral, você multiplica o resultado atual.' });
+  }
+
+  return gargalos.slice(0, 5);
+}
+
+// ═══════════════════════════════════════════════════
+// CHECKLIST DINÂMICO POR NÍVEL
+// ═══════════════════════════════════════════════════
+function gerarChecklist(score, carroChefe) {
+  const fase1 = [];
+  const fase2 = [];
+  const fase3 = [];
+
+  // FASE 1 — URGENTE (score baixo em presença/conteúdo)
+  if (score.conteudo < 50 || score.presenca < 40) {
+    fase1.push('Poste 1 vídeo curto (Reel 15-30s) com destino do seu carro-chefe hoje');
+    fase1.push('Otimize a bio do Instagram: foto profissional + descrição + CTA + link');
+    fase1.push('Poste 3 stories hoje: 1 destino, 1 depoimento, 1 pergunta para engajamento');
+    fase1.push('Escolha 5 vídeos do pack e programe para a semana toda');
+  }
+
+  if (score.trafego < 30) {
+    fase1.push('Crie sua primeira campanha de R$10/dia no Instagram (foto + copy de oferta)');
+    fase1.push('Organize sua lista de WhatsApp e envie 1 mensagem com oferta da semana');
+  }
+
+  // FASE 2 — ESTRUTURA
+  if (score.conversao < 50) {
+    fase2.push('Crie uma sequência de follow-up: mensagem no dia 1, 3 e 7 após orçamento');
+    fase2.push('Grave 1 vídeo de depoimento com cliente satisfeito esta semana');
+    fase2.push('Monte uma oferta completa: destino + datas + preço + parcelamento + CTA');
+  }
+
+  if (score.presenca < 60) {
+    fase2.push('Reorganize os destaques do Instagram por categoria (Destinos, Depoimentos, Promoções)');
+    fase2.push('Crie um calendário semanal de posts: 2 vídeos + 3 fotos + stories diários');
+    fase2.push('Peça para 3 clientes gravarem um vídeo de 30 segundos contando a experiência');
+  }
+
+  fase2.push('Defina 1 oferta por semana e divulgue nos stories, feed e WhatsApp');
+  fase2.push('Poste ranking "Top 3 destinos mais pedidos" — gera engajamento garantido');
+
+  // FASE 3 — ESCALA
+  fase3.push('Suba uma campanha de tráfego pago com o vídeo que mais performou');
+  fase3.push('Crie página de vendas para seu pacote mais vendido com preço, itinerário e depoimentos');
+  fase3.push('Implemente resposta automática no Instagram Direct com link para WhatsApp');
+  fase3.push('Faça uma live de 20 min mostrando destino + tirando dúvidas ao vivo');
+  fase3.push('Crie grupo VIP de WhatsApp para clientes antigos com promoções exclusivas');
+
+  return { fase1, fase2, fase3 };
+}
+
+// ═══════════════════════════════════════════════════
+// GERAR DIAGNÓSTICO
+// ═══════════════════════════════════════════════════
+function gerarDiagnostico() {
+  const nome = document.getElementById('f-nome').value.trim();
+  const responsavel = document.getElementById('f-responsavel').value.trim();
+  if (!nome || !responsavel) {
+    showToast('Preencha nome da agência e responsável!');
+    irBloco(1);
+    return;
+  }
+
+  // Coletar dados
+  const problemas = [...document.querySelectorAll('#checks-problemas input:checked')].map(c => c.value);
+  const pacotes = [...document.querySelectorAll('#checks-pacotes input:checked')].map(c => c.value);
+  const carroChefe = document.getElementById('f-carro-chefe').value;
+  const querVender = document.getElementById('f-quer-vender').value;
+
+  dadosCliente = {
+    nome, responsavel,
+    cidade: document.getElementById('f-cidade').value,
+    instagram: document.getElementById('f-instagram').value,
+    tempo: document.getElementById('f-tempo').value,
+    tipoAgencia: document.getElementById('f-tipo-agencia').value,
+    carroChefe, querVender, pacotes,
+    destinosNac: [...tagsNac],
+    destinosIntl: [...tagsIntl],
+    desafio: document.getElementById('f-desafio').value,
+    objecao: document.getElementById('f-objecao').value,
+    obs: document.getElementById('f-obs').value,
+    problemas,
+    dataAnalise: new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric'}),
+    horaAnalise: new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})
+  };
+
+  scoreData = calcularScore();
+  const gargalos = gerarGargalos(scoreData, scoreData.raw, problemas);
+  const checklist = gerarChecklist(scoreData, carroChefe);
+
+  renderResultado(dadosCliente, scoreData, gargalos, checklist);
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER RESULTADO
+// ═══════════════════════════════════════════════════
+function renderResultado(d, s, gargalos, checklist) {
+  const total = s.total;
+
+  let nivel, nivelLabel, nivelDesc, scoreClass, scoreColor;
+  if (total <= 25) {
+    nivel = 1; nivelLabel = 'Iniciante Digital'; scoreClass = 'score-red'; scoreColor = '#EF4444';
+    nivelDesc = getVariation([
+      `${d.nome} está no ponto de partida. O bom: agências que saem do zero com o método certo crescem muito mais rápido que as que tentam evoluir sozinhas.`,
+      `A agência ainda não tem estrutura digital. Isso não é problema — é oportunidade. Quem planta certo agora colhe nos próximos 90 dias.`,
+      `O diagnóstico mostra que ${d.responsavel} está em território de alto crescimento. O mercado está cheio de agências sem presença — e isso é vantagem para quem agir agora.`
+    ], total + 10);
+  } else if (total <= 45) {
+    nivel = 2; nivelLabel = 'Em Desenvolvimento'; scoreClass = 'score-amber'; scoreColor = '#F59E0B';
+    nivelDesc = getVariation([
+      `${d.nome} já deu os primeiros passos, mas ainda tem pontos críticos que estão travando o crescimento. Com os ajustes certos, o salto é rápido.`,
+      `Existe base, existe esforço — falta método. ${d.responsavel} está investindo energia nas áreas erradas. O diagnóstico mostra exatamente o que priorizar.`,
+      `Agência em estágio intermediário com oportunidades claras de melhoria. Os gargalos identificados são todos resolvíveis nos próximos 30 dias.`
+    ], total + 20);
+  } else if (total <= 62) {
+    nivel = 3; nivelLabel = 'Em Crescimento'; scoreClass = 'score-blue'; scoreColor = '#3B82F6';
+    nivelDesc = getVariation([
+      `${d.nome} tem estrutura razoável, mas o crescimento está travado em um teto. Pequenas mudanças agora podem dobrar o resultado nos próximos 60 dias.`,
+      `Boa base, resultados medianos. ${d.responsavel} está trabalhando muito para ter mais impacto. É hora de parar de remar mais forte e começar a remar na direção certa.`,
+      `A agência cresceu, mas chegou num platô. O diagnóstico mostra os pontos exatos onde pequenas melhorias vão gerar grandes saltos de resultado.`
+    ], total + 30);
+  } else if (total <= 80) {
+    nivel = 4; nivelLabel = 'Estabelecida'; scoreClass = 'score-green'; scoreColor = '#10B981';
+    nivelDesc = getVariation([
+      `${d.nome} está bem posicionada. O foco agora é escalar — mais volume, mais automação, mais anúncio — sem necessariamente trabalhar mais horas.`,
+      `Excelente estrutura para uma agência de viagens. ${d.responsavel} já sabe o que funciona. O próximo nível é sistematizar para crescer com previsibilidade.`,
+      `Agência com boa operação e presença digital. Há espaço para dobrar o faturamento com as alavancas certas de tráfego e conversão.`
+    ], total + 40);
+  } else {
+    nivel = 5; nivelLabel = 'Referência no Mercado'; scoreClass = 'score-green'; scoreColor = '#10B981';
+    nivelDesc = getVariation([
+      `${d.nome} é referência. O trabalho agora é manter a liderança, expandir canais e criar ativos que gerem receita passiva.`,
+      `Agência consolidada com operação profissional. Parabéns, ${d.responsavel}. O próximo passo é expansão — novos produtos, novos canais, nova escala.`,
+    ], total + 50);
+  }
+
+  // Gargalos HTML
+  const gargalosHtml = gargalos.map(g => `
+    <div class="gargalo-item ${g.type}">
+      <div class="gargalo-dot ${g.type}"></div>
+      <div class="gargalo-text"><b>${g.title}</b><br>${g.desc}</div>
+    </div>
+  `).join('');
+
+  // Checklist HTML
+  function checklistPhase(title, color, items) {
+    if (!items.length) return '';
+    const badgeColors = {verde:'#10B981',amarelo:'#F59E0B',azul:'#3B82F6'};
+    const listHtml = items.map((item, i) => `
+      <div class="cl-item" onclick="toggleCheck(this)" id="cl-${Math.random().toString(36).substr(2,6)}">
+        <div class="cl-check">✓</div>
+        <div class="cl-text">${item}</div>
+      </div>
+    `).join('');
+    return `<div class="check-phase">
+      <div class="check-phase-title"><span class="check-phase-badge" style="background:${color}20;color:${color}">${title}</span></div>
+      ${listHtml}
+    </div>`;
+  }
+
+  const checklistHtml = checklistPhase('🔴 Prioridade Imediata', '#EF4444', checklist.fase1)
+    + checklistPhase('🟡 Próximos 15 dias', '#F59E0B', checklist.fase2)
+    + checklistPhase('🟢 Mês 2 em diante', '#10B981', checklist.fase3);
+
+  // Planos recomendados
+  const planosHtml = getPlanosHtml(d.carroChefe, nivel);
+
+  // Objetivo dinâmico
+  const objetivos = {
+    nordeste: ['Vender pacotes de praia do Nordeste com consistência e sem depender de indicação','Tornar-se a agência referência em Nordeste na sua cidade','Fechar pacotes nacionais todo mês com anúncio e conteúdo pronto'],
+    sul: ['Capturar clientes que sonham com Floripa, Rio e Gramado','Vender pacotes do Sul/Sudeste para famílias e casais','Ser a primeira opção quando alguém pensa em Gramado ou Rio'],
+    internacional: ['Vender pacotes internacionais com margens maiores','Atrair clientes de alto ticket para destinos na Europa e EUA','Posicionar a agência como especialista em viagens internacionais'],
+    cruzeiro: ['Dominar o mercado de cruzeiros na sua região','Vender cabines com recorrência e upsell de excursões','Criar grupo de clientes fiéis de cruzeiros que compram todo ano'],
+    default: ['Aumentar o número de orçamentos semanais','Fechar mais viagens com o mesmo esforço de hoje','Ter constância de conteúdo que gera leads todo dia']
+  };
+  const objList = objetivos[d.carroChefe] || objetivos.default;
+  const objetivo = objList[hashVariation(total, objList.length)];
+
+  // RENDER
+  document.getElementById('doc-result').innerHTML = `
+    <div class="doc-header">
+      <div class="doc-badge">Canva Viagem — Diagnóstico de Agência</div>
+      <div class="doc-title">${d.nome}</div>
+      <div class="doc-sub">Responsável: ${d.responsavel} · ${d.cidade || 'Brasil'}</div>
+      <div class="doc-meta">
+        <div class="doc-meta-item"><b>Analisado em:</b> ${d.dataAnalise} às ${d.horaAnalise}</div>
+        ${d.instagram ? `<div class="doc-meta-item"><b>Instagram:</b> ${d.instagram}</div>` : ''}
+        ${d.tipoAgencia ? `<div class="doc-meta-item"><b>Tipo:</b> ${tipoLabel(d.tipoAgencia)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="score-block ${scoreClass}">
+      <div class="score-main">
+        <div class="score-circle">
+          <div class="score-number">${total}</div>
+          <div class="score-max">/100</div>
+        </div>
+        <div class="score-info">
+          <h2>Nível ${nivel} — ${nivelLabel}</h2>
+          <p>${nivelDesc}</p>
+        </div>
+      </div>
+      <div class="score-strip">
+        <div class="score-dim"><div class="score-dim-val" style="color:${dimColor(s.presenca)}">${s.presenca}</div><div class="score-dim-label">Presença</div></div>
+        <div class="score-dim"><div class="score-dim-val" style="color:${dimColor(s.conteudo)}">${s.conteudo}</div><div class="score-dim-label">Conteúdo</div></div>
+        <div class="score-dim"><div class="score-dim-val" style="color:${dimColor(s.vendas)}">${s.vendas}</div><div class="score-dim-label">Vendas</div></div>
+        <div class="score-dim"><div class="score-dim-val" style="color:${dimColor(s.trafego)}">${s.trafego}</div><div class="score-dim-label">Tráfego</div></div>
+        <div class="score-dim"><div class="score-dim-val" style="color:${dimColor(s.conversao)}">${s.conversao}</div><div class="score-dim-label">Conversão</div></div>
+      </div>
+    </div>
+
+    <div class="doc-body">
+
+      <div class="section-title"><span class="ico">🎯</span> Objetivo Identificado</div>
+      <div class="gargalo-item green" style="margin-bottom:20px">
+        <div class="gargalo-dot green"></div>
+        <div class="gargalo-text"><b>${objetivo}</b></div>
+      </div>
+
+      <div class="section-title"><span class="ico">🔍</span> Gargalos Identificados</div>
+      ${gargalosHtml}
+
+      <div style="margin-top:24px"></div>
+      <div class="section-title"><span class="ico">✅</span> Plano de Ação</div>
+      ${checklistHtml}
+
+      <div style="margin-top:24px"></div>
+      <div class="section-title"><span class="ico">📦</span> Ferramentas Recomendadas</div>
+      <div class="planos-grid">${planosHtml}</div>
+
+      <div style="margin-top:28px;padding:16px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;text-align:center">
+        <div style="font-size:13px;color:#374151;margin-bottom:10px"><b>Ver seus entregáveis prontos:</b> vídeos, legendas e ofertas selecionadas para o seu nicho</div>
+        <button onclick="irFase2()" style="background:linear-gradient(135deg,#10B981,#059669);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">📦 Acessar Entregáveis →</button>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('sec-form').style.display = 'none';
+  document.getElementById('sec-result').style.display = 'block';
+  document.getElementById('sec-fase2').style.display = 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══ HELPERS ═══
+function dimColor(val) {
+  if (val < 35) return '#EF4444';
+  if (val < 60) return '#F59E0B';
+  return '#10B981';
+}
+
+function tipoLabel(v) {
+  const m = {autonoma:'Agente autônoma',pequena:'Agência pequena',media:'Agência média',franquia:'Franquia',consolidadora:'Consolidadora'};
+  return m[v] || v;
+}
+
+function getVariation(arr, seed) {
+  return arr[hashVariation(seed, arr.length)];
+}
+
+function getPlanosHtml(carroChefe, nivel) {
+  const planos = [
+    {
+      titulo:'🎬 Pack 150 Vídeos',
+      preco:'R$47',
+      desc:'Vídeos prontos para postar hoje no Instagram e TikTok. Nunca mais fique sem conteúdo.',
+      cor:'#10B981',
+      link:'https://canvaviagem.com/videos'
+    },
+    {
+      titulo:'📅 1 Ano de Conteúdo',
+      preco:'R$97',
+      desc:'Artes, stories, reels e planejamento completo para 12 meses de presença profissional.',
+      cor:'#3B82F6',
+      link:'https://canvaviagem.com/1-ano'
+    },
+    {
+      titulo:'🤖 Agente de IA para Vendas',
+      preco:'R$47',
+      desc:'Assistente que responde clientes, qualifica leads e fecha vendas no WhatsApp automaticamente.',
+      cor:'#8B5CF6',
+      link:'https://canvaviagem.com/ia'
+    },
+    {
+      titulo:'🎓 Agente Lucrativo',
+      preco:'R$97',
+      desc:'Curso completo de como vender viagens na internet, do zero ao primeiro cliente pelo Instagram.',
+      cor:'#F59E0B',
+      link:'https://canvaviagem.com/agente-lucrativo'
+    }
+  ];
+
+  return planos.map(p => `
+    <a class="plano-card" href="${p.link}" target="_blank" style="background:${p.cor}15;border-color:${p.cor}40;text-decoration:none;color:inherit">
+      <h3 style="color:${p.cor}">${p.titulo}</h3>
+      <div class="preco" style="color:#1A1A2E">${p.preco}</div>
+      <p style="color:#4B5563">${p.desc}</p>
+    </a>
+  `).join('');
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+}
+
+// ═══════════════════════════════════════════════════
+// FASE 2 — ENTREGÁVEIS
+// ═══════════════════════════════════════════════════
+const CATALOGO_VIDEOS = {
+  nordeste: [
+    {id:'N01',titulo:'POV: você acabou de chegar em Maceió e a praia está assim',meta:'Reel 15s | Alta viralização',badge:'badge-praia'},
+    {id:'N02',titulo:'3 praias de Natal que ninguém te conta',meta:'Reel 30s | Educativo',badge:'badge-praia'},
+    {id:'N03',titulo:'Por que Fortaleza é o destino favorito das famílias',meta:'Reel 30s | Informativo',badge:'badge-praia'},
+    {id:'N04',titulo:'Porto de Galinhas: tudo que você precisa saber antes de ir',meta:'Reel 45s | Tutorial',badge:'badge-praia'},
+    {id:'N05',titulo:'Maragogi: o Caribe Brasileiro que cabe no bolso',meta:'Reel 20s | Oferta',badge:'badge-praia'},
+    {id:'N06',titulo:'João Pessoa em 48h — roteiro completo',meta:'Reel 30s | Roteiro',badge:'badge-praia'},
+    {id:'N07',titulo:'Recife + Porto de Galinhas: o pacote perfeito',meta:'Reel 30s | Oferta combinada',badge:'badge-praia'},
+    {id:'N08',titulo:'Jericoacoara: como chegar e quanto custa TUDO',meta:'Reel 45s | Guia completo',badge:'badge-praia'},
+    {id:'N09',titulo:'Salvador histórico + praias — 5 dias que valem',meta:'Reel 30s | Roteiro',badge:'badge-praia'},
+    {id:'N10',titulo:'Preço real de uma semana em Natal com tudo incluído',meta:'Reel 20s | Transparência',badge:'badge-praia'},
+  ],
+  sul: [
+    {id:'S01',titulo:'Gramado no inverno: prepare-se para isso',meta:'Reel 20s | Alta viralização',badge:'badge-praia'},
+    {id:'S02',titulo:'Florianópolis: qual praia escolher segundo o perfil',meta:'Reel 30s | Educativo',badge:'badge-praia'},
+    {id:'S03',titulo:'Rio de Janeiro em 4 dias — roteiro completo',meta:'Reel 45s | Roteiro',badge:'badge-praia'},
+    {id:'S04',titulo:'Balneário Camboriú: o que fazer além de ir à praia',meta:'Reel 30s | Dicas',badge:'badge-praia'},
+    {id:'S05',titulo:'Búzios para casais: o guia que você queria ter',meta:'Reel 30s | Romance',badge:'badge-praia'},
+  ],
+  internacional: [
+    {id:'I01',titulo:'Orlando com crianças: quanto custa TUDO de verdade',meta:'Reel 45s | Transparência',badge:'badge-intl'},
+    {id:'I02',titulo:'Cancún em março: praia + preço + dicas reais',meta:'Reel 30s | Oferta',badge:'badge-intl'},
+    {id:'I03',titulo:'Buenos Aires: o que fazer com R$500 por dia',meta:'Reel 30s | Budget travel',badge:'badge-intl'},
+    {id:'I04',titulo:'Miami em 5 dias — do básico ao luxo',meta:'Reel 30s | Roteiro',badge:'badge-intl'},
+    {id:'I05',titulo:'Lisboa em 7 dias: roteiro completo para brasileiros',meta:'Reel 45s | Roteiro',badge:'badge-intl'},
+    {id:'I06',titulo:'Paris: o que NINGUÉM te conta antes de ir',meta:'Reel 30s | Revelação',badge:'badge-intl'},
+    {id:'I07',titulo:'Punta Cana all-inclusive: vale ou não vale?',meta:'Reel 30s | Review',badge:'badge-intl'},
+    {id:'I08',titulo:'Dubai em 6 dias: o que você pode fazer',meta:'Reel 30s | Luxo',badge:'badge-intl'},
+    {id:'I09',titulo:'Nova York pela primeira vez: roteiro de sobrevivência',meta:'Reel 45s | Tutorial',badge:'badge-intl'},
+    {id:'I10',titulo:'Japão para brasileiros: quanto custa e como ir',meta:'Reel 45s | Guia',badge:'badge-intl'},
+  ],
+  cruzeiro: [
+    {id:'C01',titulo:'Cruzeiro pela primeira vez: o que levar e o que não fazer',meta:'Reel 45s | Tutorial',badge:'badge-aventura'},
+    {id:'C02',titulo:'Cruzeiro Mediterrâneo: preço real e o que inclui',meta:'Reel 30s | Transparência',badge:'badge-aventura'},
+    {id:'C03',titulo:'Cruzeiro Brasil: cabines a partir de R$X — como funciona',meta:'Reel 30s | Oferta',badge:'badge-aventura'},
+    {id:'C04',titulo:'Diferença entre cruzeiro all-inclusive e básico',meta:'Reel 30s | Educativo',badge:'badge-aventura'},
+    {id:'C05',titulo:'Como fazer cruzeiro economizando na excursão',meta:'Reel 30s | Dica',badge:'badge-aventura'},
+  ],
+  aventura: [
+    {id:'A01',titulo:'Bonito MS: o destino de ecoturismo mais incrível do Brasil',meta:'Reel 30s | Destino',badge:'badge-aventura'},
+    {id:'A02',titulo:'Foz do Iguaçu: como aproveitar as 3 fronteiras',meta:'Reel 30s | Roteiro',badge:'badge-aventura'},
+    {id:'A03',titulo:'Chapada Diamantina: trekking, cachoeiras e trilhas',meta:'Reel 45s | Aventura',badge:'badge-aventura'},
+    {id:'A04',titulo:'Lençóis Maranhenses: o melhor período para visitar',meta:'Reel 20s | Dica',badge:'badge-aventura'},
+  ],
+  mkt: [
+    {id:'M01',titulo:'Por que sua agência não aparece no Instagram (e como mudar)',meta:'Reel 30s | Estratégia | Alta viralização',badge:'badge-mkt'},
+    {id:'M02',titulo:'A diferença entre agência que vende e agência que luta',meta:'Reel 20s | Provocação',badge:'badge-mkt'},
+    {id:'M03',titulo:'Como responder um orçamento no WhatsApp para fechar mais',meta:'Reel 30s | Vendas',badge:'badge-mkt'},
+    {id:'M04',titulo:'5 tipos de post que toda agência de viagem deveria fazer',meta:'Reel 30s | Educativo',badge:'badge-mkt'},
+    {id:'M05',titulo:'Como conseguir depoimentos em vídeo dos seus clientes',meta:'Reel 20s | Prova social',badge:'badge-mkt'},
+    {id:'M06',titulo:'Você está perdendo cliente para o concorrente? Veja por quê',meta:'Reel 30s | Provocação',badge:'badge-mkt'},
+    {id:'M07',titulo:'Como criar uma oferta que vende em 24h',meta:'Reel 30s | Copy',badge:'badge-mkt'},
+  ]
+};
+
+const LEGENDAS_BASE = {
+  nordeste: [
+    {dest:'Natal - RN', text:'Busca praia de verdade em Natal - RN? 🌅🏖️ Piscinas naturais, dunas cor de rosa e aquelas jangadas que todo mundo quer subir. Nossos pacotes incluem ✈️ passagens + 🏨 hotel, parcelado em até 12x sem juros.\n✔️ Vagas limitadas — fale agora!\n📲 [WhatsApp]: (99) 99999-9999', hashtags:'#NatalRN #PacotesViagem #AgenteDeViagem'},
+    {dest:'Maceió - AL', text:'Quer ver o mar que parece aquário? 🐟🌊 Maceió tem as piscinas naturais mais lindas do Brasil. Pacotes com aéreo + hotel a partir de 10x de R$180.\n✔️ Reserve sua vaga antes que esgote!\n📲 [WhatsApp]: (99) 99999-9999', hashtags:'#Maceio #CaribeBrasileiro #ViagemDeSonho'},
+    {dest:'Porto de Galinhas - PE', text:'🐠 Porto de Galinhas te esperando! Piscinas naturais com peixinhos coloridos, areia branca e mar verde-esmeralda. Pacotes com passagem + hotel + passeio de jangada.\n📲 [WhatsApp]: (99) 99999-9999\nParcelamos em até 12x!', hashtags:'#PortoDeGalinhas #Nordeste #FeriasPerfetas'},
+  ],
+  sul: [
+    {dest:'Gramado - RS', text:'❄️ Gramado em julho é uma experiência única. Chocolates, fondue, pinheiros e um frio gostoso. Pacotes com hotel boutique + café da manhã colonial.\n📲 [WhatsApp]: (99) 99999-9999\n✔️ Garante o seu antes do inverno', hashtags:'#Gramado #SulDoBrasil #ViagemRomantica'},
+    {dest:'Florianópolis - SC', text:'🌴 Florianópolis tem 42 praias. QUARENTA E DUAS. Tem praia pra todo perfil: família, surfe, agito e isolamento total. Pacotes com passagem + hotel.\n📲 [WhatsApp]: (99) 99999-9999', hashtags:'#Florianopolis #IlhaDaMagia #ViagemBrasil'},
+  ],
+  internacional: [
+    {dest:'Orlando - EUA', text:'🎢 Orlando com crianças é inesquecível. Walt Disney World, Universal Studios, SeaWorld — tudo em um roteiro organizado por especialista. Pacotes com passagem + hotel + ingressos.\n📲 [WhatsApp]: (99) 99999-9999\nParcelamos em até 12x sem juros!', hashtags:'#Orlando #Disney #ViagemInternacional'},
+    {dest:'Cancún - México', text:'🌺 Cancún em março: praia de água turquesa, sol garantido e pacotes com all-inclusive disponíveis. Cuida do seu descanso que a gente cuida de tudo mais.\n📲 [WhatsApp]: (99) 99999-9999', hashtags:'#Cancun #Mexico #ViagemDeSonho'},
+    {dest:'Lisboa - Portugal', text:'🚋 Lisboa é aquela cidade que você vai e quer ficar. Pastéis de nata, bondinhos, sol e o Atlântico. Pacotes com passagem + hotel 7 noites.\n📲 [WhatsApp]: (99) 99999-9999\n✔️ Parcelamos em até 12x', hashtags:'#Lisboa #Portugal #EuropaBrasileiro'},
+  ],
+  cruzeiro: [
+    {dest:'Cruzeiros', text:'⛴️ Cruzeiro é a viagem que faz tudo: destino + hotel + comida + entretenimento. Tudo incluso, tudo no mesmo lugar. Consulte nossas datas e cabines disponíveis.\n📲 [WhatsApp]: (99) 99999-9999\nParcelamos em até 12x!', hashtags:'#Cruzeiro #ViagemDeSonho #TodosIncluso'},
+  ],
+  default: [
+    {dest:'Viagens', text:'✈️ Sua próxima viagem começa aqui! Destinos nacionais e internacionais com planejamento completo, passagens, hotel e sem estresse.\n📲 [WhatsApp]: (99) 99999-9999\n✔️ Parcelamos em até 12x sem juros', hashtags:'#AgenteDeViagem #ViagemDeSonho #PacotesDeViagem'},
+  ]
+};
+
+const OFERTAS_BASE = {
+  nordeste: [
+    {titulo:'🌊 Oferta Nordeste — Caribe Brasileiro', text:'📍 NATAL + PISCINAS NATURAIS | 5 NOITES\n💰 A partir de R$ 1.800/pessoa\n✈️ Passagem aérea + 🏨 Hotel beira-mar + Café da manhã\n🪸 Passeio de buggy nas dunas INCLUSO\n💳 10x sem juros | Pix: 5% desconto\n\n📲 Garanta sua vaga: [WhatsApp]'},
+    {titulo:'🐠 Porto de Galinhas + Maceió — Combo Nordeste', text:'📍 COMBO NORDESTE | 7 NOITES\n💰 A partir de R$ 2.400/pessoa\n✈️ Passagens + 🏨 2 hotéis + Café da manhã\n🪸 Jangada piscinas naturais INCLUÍDA\n💳 12x sem juros\n\n📲 Consulte disponibilidade: [WhatsApp]'},
+  ],
+  sul: [
+    {titulo:'❄️ Gramado Romântico — Inverno Completo', text:'📍 GRAMADO | 4 NOITES\n💰 A partir de R$ 1.800/pessoa\n🏔️ Hotel boutique + Café da manhã colonial\n✈️ Transfer incluso | Chegada Porto Alegre\n💳 10x sem juros\n\n📲 Reserve agora: [WhatsApp]'},
+    {titulo:'🌴 Florianópolis — Verão Inesquecível', text:'📍 FLORIANÓPOLIS | 5 NOITES\n💰 A partir de R$ 1.900/pessoa\n✈️ Passagem aérea + 🏨 Hotel na Praia\n🏖️ 42 praias para explorar\n💳 10x sem juros\n\n📲 Fale conosco: [WhatsApp]'},
+  ],
+  internacional: [
+    {titulo:'🎢 Orlando — A Viagem dos Sonhos da Família', text:'📍 ORLANDO | 7 NOITES\n💰 A partir de R$ 6.500/pessoa\n✈️ Passagem aérea + 🏨 Hotel perto da Disney\n🎡 Ingressos disponíveis\n💳 12x sem juros\n\n📲 Monte seu pacote: [WhatsApp]'},
+    {titulo:'🌺 Cancún All-Inclusive — Sol e Mar Garantidos', text:'📍 CANCÚN | 7 NOITES ALL-INCLUSIVE\n💰 A partir de R$ 5.500/pessoa\n✈️ Passagem aérea + 🏨 Resort all-inclusive\n🍹 Alimentação + bebidas incluídas\n💳 12x sem juros\n\n📲 Reserve sua vaga: [WhatsApp]'},
+  ],
+  cruzeiro: [
+    {titulo:'⛴️ Cruzeiro — Tudo Incluso em Um Lugar Só', text:'📍 CRUZEIRO | A partir de 7 NOITES\n💰 Cabines a partir de R$ 2.900/pessoa\n⛴️ Navio + Refeições + Entretenimento\n🌊 Múltiplos destinos em uma só viagem\n💳 10x sem juros\n\n📲 Consulte datas: [WhatsApp]'},
+  ],
+  default: [
+    {titulo:'✈️ Pacote Especial — Destino dos Sonhos', text:'📍 [SEU DESTINO] | Noites a combinar\n💰 A partir de R$ X/pessoa\n✈️ Passagem aérea + 🏨 Hotel + Café da manhã\n💳 10x sem juros | Pix: 5% desconto\n\n📲 Fale conosco: [WhatsApp]'},
+  ]
+};
+
+function irFase2() {
+  const d = dadosCliente;
+  const s = scoreData;
+  const nicho = d.carroChefe || 'misto';
+
+  // Intro personalizado
+  document.getElementById('f2-intro').textContent =
+    `Selecionamos vídeos, legendas e ofertas para ${d.nome || 'sua agência'} com foco em ${nichoLabel(nicho)}. Baixe, adapte e publique.`;
+
+  // VÍDEOS
+  let videos = [];
+  const mainCat = nicho === 'nordeste' ? 'nordeste'
+    : nicho === 'sul' ? 'sul'
+    : nicho === 'internacional' ? 'internacional'
+    : nicho === 'cruzeiro' ? 'cruzeiro'
+    : nicho === 'aventura' ? 'aventura'
+    : 'nordeste';
+
+  videos = [...(CATALOGO_VIDEOS[mainCat] || []).slice(0, 5), ...(CATALOGO_VIDEOS.mkt || []).slice(0, 3)];
+
+  document.getElementById('f2-videos').innerHTML = videos.map((v, i) => `
+    <div class="video-item">
+      <div class="video-num">#${String(i+1).padStart(2,'0')}</div>
+      <div class="video-info">
+        <div class="video-title">${v.titulo}</div>
+        <div class="video-meta">${v.meta}</div>
+        <span class="video-badge ${v.badge}">${badgeLabel(v.badge)}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // LEGENDAS
+  const legKey = nicho === 'nordeste' ? 'nordeste'
+    : nicho === 'sul' ? 'sul'
+    : nicho === 'internacional' ? 'internacional'
+    : nicho === 'cruzeiro' ? 'cruzeiro'
+    : 'default';
+
+  const legendas = [...(LEGENDAS_BASE[legKey] || []), ...LEGENDAS_BASE.default].slice(0,4);
+  document.getElementById('f2-legendas').innerHTML = legendas.map((l, i) => `
+    <div class="legenda-item">
+      <div class="legenda-dest">${l.dest}</div>
+      <div class="legenda-text">${l.text.replace(/</g,'&lt;')}</div>
+      <div style="font-size:11px;color:#6B7280;margin-top:4px">${l.hashtags}</div>
+      <button class="legenda-copy" onclick="copiarTexto('${encodeURIComponent(l.text + '\n' + l.hashtags)}', this)">📋 Copiar legenda</button>
+    </div>
+  `).join('');
+
+  // OFERTAS
+  const ofKey = ['nordeste','sul','internacional','cruzeiro'].includes(nicho) ? nicho : 'default';
+  const ofertas = (OFERTAS_BASE[ofKey] || OFERTAS_BASE.default).slice(0,3);
+  document.getElementById('f2-ofertas').innerHTML = ofertas.map((o, i) => `
+    <div class="oferta-item">
+      <div class="oferta-title">${o.titulo}</div>
+      <div class="oferta-text">${o.text.replace(/</g,'&lt;')}</div>
+      <div class="oferta-actions">
+        <button class="oferta-btn" onclick="copiarTexto('${encodeURIComponent(o.text)}', this)">📋 Copiar texto</button>
+        <button class="oferta-btn full" onclick="copiarTexto('${encodeURIComponent(o.text)}', this)">✅ Usar como post</button>
+      </div>
+    </div>
+  `).join('');
+
+  // CHECKLIST 30 DIAS
+  const cl = gerarChecklist30Dias(nicho, s);
+  document.getElementById('f2-checklist').innerHTML = cl.map((item, i) => `
+    <div class="f2-check" onclick="this.classList.toggle('done');this.querySelector('.f2-check-box').textContent=this.classList.contains('done')?'✓':''">
+      <div class="f2-check-box"></div>
+      <div class="f2-check-text">
+        <div class="f2-check-label">${item.label}</div>
+        <div class="f2-check-desc">${item.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('sec-result').style.display = 'none';
+  document.getElementById('sec-fase2').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function gerarChecklist30Dias(nicho, s) {
+  const items = [
+    {label:'📱 Poste o 1º vídeo do pack hoje', desc:'Use o vídeo #01 selecionado acima. Legenda já está pronta acima.'},
+    {label:'✍️ Configure a bio do Instagram', desc:'Foto profissional + descrição clara + CTA + link para WhatsApp'},
+    {label:'📲 Envie oferta para sua lista de WhatsApp', desc:'Use o texto de oferta acima. Copie, adapte o preço e envie para seus contatos'},
+    {label:'📅 Programe 5 posts para a semana', desc:'Use os vídeos recomendados + legendas prontas acima'},
+    {label:'🎬 Poste 2 Reels esta semana', desc:'Reels têm 10x mais alcance que fotos. Use os vídeos indicados'},
+    {label:'💬 Peça 1 depoimento para um cliente', desc:'Mande mensagem para quem comprou recentemente e peça um print ou vídeo'},
+    {label:'📸 Organize 3 destaques no Instagram', desc:'Destinos, Depoimentos e Promoções — os mais importantes para novos visitantes'},
+    {label:'🏷️ Crie sua primeira oferta da semana', desc:'Use a sugestão de oferta acima. Publique no feed + stories + WhatsApp'},
+    {label:'📊 Faça 1 enquete nos Stories', desc:'"Qual destino você quer visitar esse ano?" — gera engajamento e qualifica leads'},
+    {label:'🎯 Defina o destino-foco do mês', desc:`Foque em ${nichoLabel(nicho)}. Toda semana, 2 posts sobre este destino`},
+    {label:'📤 Compartilhe 1 resultado de cliente', desc:'Print de agradecimento, foto de viagem, feedback positivo — isso vende'},
+    {label:'🔗 Coloque link no WhatsApp na bio', desc:'Link direto para WhatsApp com mensagem pré-definida. Reduz fricção para contato'},
+    {label:'📣 Faça 1 stories com CTA direto', desc:'"Quer viajar para X? Manda DM com a palavra QUERO" — funciona muito bem'},
+    {label:'📋 Monte calendário de posts da semana 2', desc:'Já planeje a semana seguinte com vídeos, legendas e stories programados'},
+    {label:'📊 Analise qual post performou melhor', desc:'Veja as métricas do Instagram. Qual tipo de conteúdo gerou mais salvamentos?'},
+  ];
+  return items;
+}
+
+function nichoLabel(n) {
+  const m = {nordeste:'praia Nordeste',sul:'praia Sul/Sudeste',internacional:'destinos internacionais',cruzeiro:'cruzeiros',aventura:'ecoturismo e aventura',religioso:'turismo religioso',misto:'múltiplos destinos'};
+  return m[n] || 'viagens';
+}
+
+function badgeLabel(b) {
+  const m = {'badge-praia':'Nacional','badge-intl':'Internacional','badge-mkt':'Marketing','badge-aventura':'Aventura'};
+  return m[b] || '';
+}
+
+// ═══ COPY ═══
+function copiarTexto(encoded, btn) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+function copiarWhats() {
+  const d = dadosCliente;
+  const s = scoreData;
+  const text = `📊 *DIAGNÓSTICO CANVA VIAGEM*\n\n`
+    + `*Agência:* ${d.nome}\n`
+    + `*Responsável:* ${d.responsavel}\n`
+    + `*Score:* ${s.total}/100\n\n`
+    + `*Dimensões:*\n`
+    + `• Presença: ${s.presenca}/100\n`
+    + `• Conteúdo: ${s.conteudo}/100\n`
+    + `• Vendas: ${s.vendas}/100\n`
+    + `• Tráfego: ${s.trafego}/100\n`
+    + `• Conversão: ${s.conversao}/100\n\n`
+    + `📅 Analisado em ${d.dataAnalise}\n`
+    + `_Diagnóstico Canva Viagem_`;
+  navigator.clipboard.writeText(text).then(() => showToast('Resumo copiado! Cole no WhatsApp.'));
+}
+
+function imprimirPDF() {
+  window.print();
+}
+
+function voltarForm() {
+  document.getElementById('sec-form').style.display = 'block';
+  document.getElementById('sec-result').style.display = 'none';
+  document.getElementById('sec-fase2').style.display = 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function voltarResultado() {
+  document.getElementById('sec-result').style.display = 'block';
+  document.getElementById('sec-fase2').style.display = 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Print styles
+const printStyle = document.createElement('style');
+printStyle.textContent = `@media print {
+  #sec-form, #sec-fase2, .toolbar { display:none!important }
+  #sec-result { display:block!important }
+  .doc { box-shadow:none; }
+}`;
+document.head.appendChild(printStyle);
+</script>
+</body>
+</html>
