@@ -1695,12 +1695,13 @@ function voltarResultado() {
 }
 
 function popularTeste() {
+  const nicho = document.getElementById('admin-nicho')?.value || 'nordeste';
   const campos = {
     'f-nome': 'Mundo Viagens',
     'f-responsavel': 'Lucas Ferrari',
     'f-cidade': 'Fortaleza-CE',
     'f-instagram': '@mundoviagens',
-    'f-carro-chefe': 'nordeste',
+    'f-carro-chefe': nicho,
     'f-tempo': '3',
     'f-ticket': '2'
   };
@@ -1716,9 +1717,9 @@ function popularTeste() {
     nome: 'Mundo Viagens',
     responsavel: 'Lucas Ferrari',
     cidade: 'Fortaleza-CE',
-    carroChefe: 'nordeste',
-    dataAnalise: new Date().toLocaleDateString(),
-    horaAnalise: new Date().toLocaleTimeString(),
+    carroChefe: nicho,
+    dataAnalise: new Date().toLocaleDateString('pt-BR'),
+    horaAnalise: new Date().toLocaleTimeString('pt-BR'),
     problemas: ['sem_reels', 'sem_posts']
   };
   
@@ -1729,10 +1730,8 @@ function popularTeste() {
     vendas: 70, 
     trafego: 30, 
     conversao: 80, 
-    raw: { seguidores: 2, posts: 2, orcamentos: 2, carroChefe: 'nordeste' } 
+    raw: { seguidores: 2, posts: 2, orcamentos: 2, carroChefe: nicho } 
   };
-  
-  showToast('🛠️ Sistema pronto para teste!');
 }
 
 function showToast(msg) {
