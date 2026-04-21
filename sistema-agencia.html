@@ -259,11 +259,22 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
 
 <!-- PAINEL ADMIN / DEV -->
 <div class="admin-nav" style="background:#000; border-bottom: 2px solid #10B981;">
-  <span class="admin-nav-title" style="color:#10B981">MODO TESTE:</span>
-  <button class="admin-btn" onclick="location.reload()">🔄 Reset Total</button>
-  <button class="admin-btn" onclick="voltarForm()">Fase 1: Form</button>
-  <button class="admin-btn" onclick="irFase2()">Fase 2: Entregáveis</button>
-  <button class="admin-btn" onclick="irFase3()">Fase 3: Artes</button>
+  <span class="admin-nav-title" style="color:#10B981">⚡ ADMIN:</span>
+  <button class="admin-btn" onclick="location.reload()">🔄 Reset</button>
+  <div class="admin-sep"></div>
+  <button class="admin-btn" id="abtn-form" onclick="adminIr('form')">📋 Fase 1: Form</button>
+  <button class="admin-btn" id="abtn-result" onclick="adminIr('result')">📊 Resultado</button>
+  <button class="admin-btn" id="abtn-fase2" onclick="adminIr('fase2')">🎬 Fase 2: Conteúdo</button>
+  <button class="admin-btn" id="abtn-fase3" onclick="adminIr('fase3')">🎨 Fase 3: Artes</button>
+  <div class="admin-sep"></div>
+  <select id="admin-nicho" style="background:#1a1a2e;border:1px solid #333;color:#9CA3AF;padding:3px 8px;border-radius:4px;font-size:11px;font-family:Inter,sans-serif">
+    <option value="nordeste">🏖️ Nordeste</option>
+    <option value="sul">🌊 Sul/Sudeste</option>
+    <option value="internacional">✈️ Internacional</option>
+    <option value="cruzeiro">⛴️ Cruzeiro</option>
+    <option value="aventura">🌿 Aventura</option>
+    <option value="misto">🗺️ Misto</option>
+  </select>
 </div>
 
 <!-- ═══════════════════ SEÇÃO 1: FORMULÁRIO ═══════════════════ -->
