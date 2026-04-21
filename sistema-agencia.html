@@ -1802,8 +1802,10 @@ function adminIr(secao) {
   if (secao === 'form') {
     document.getElementById('sec-form').style.display = 'block';
   } else if (secao === 'result') {
-    gerarResultado(); // gera o HTML do resultado com dados de teste
-    document.getElementById('sec-result').style.display = 'block';
+    // Gera resultado direto com dados de teste, sem precisar do formulário
+    const gargalos = gerarGargalos(scoreData, scoreData.raw, dadosCliente.problemas);
+    const checklist = gerarChecklist(scoreData, dadosCliente.carroChefe);
+    renderResultado(dadosCliente, scoreData, gargalos, checklist);
   } else if (secao === 'fase2') {
     construirHTMLFase2();
   } else if (secao === 'fase3') {
