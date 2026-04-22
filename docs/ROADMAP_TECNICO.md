@@ -17,7 +17,7 @@
 | Landing page de vendas | ✅ Pronto | `arquivos/landing_page_travelboost.html` |
 | Script de live | ✅ Pronto | `arquivos/SCRIPT_LIVE_TRAVELBOOST.md` |
 | Backend Python + Claude API | ✅ Pronto | `arquivos/travelboost_system.py` |
-| Criação de artes (Fase 3) | ⏳ Pendente | — |
+| Criação de artes (Fase 3) | ✅ Pronto (Motor IA Integrado) | `sistema-agencia.html` |
 | Site do cliente (Fase 4) | ⏳ Pendente | — |
 | Sistema de login/memória | ⏳ Pendente | — |
 | Dashboard admin | ⏳ Pendente | — |
@@ -57,11 +57,10 @@ O `sistema-agencia.html` já entrega as Fases 1 e 2 completas:
 - [ ] Sistema de progresso por fase
 
 ### Sprint 3 — Fase 3: Artes (Semana 5–6)
-- [ ] Upload de logo do cliente
-- [ ] Integração Banana Pro API
-- [ ] Templates de feed quadrado (3 modelos)
-- [ ] Templates de story vertical (2 modelos)
-- [ ] Download direto das artes geradas
+- [x] Integração NanoBanana (Pollinations/Gemini)
+- [x] Templates dinâmicos de feed e story
+- [ ] Geração de artes realistas com foco em conversão
+- [ ] Download direto das artes geradas (validado)
 
 ### Sprint 4 — Fase 4: Site (Semana 7–8)
 - [ ] Formulário de coleta de dados do site

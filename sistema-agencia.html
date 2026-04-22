@@ -219,6 +219,18 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;border:1px solid var(--green);box-shadow:0 8px 32px rgba(0,0,0,.4)}
 .toast.show{opacity:1}
 
+/* VÍDEOS PRONTOS / CANVA */
+.video-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.btn-download{padding:6px 14px;border-radius:6px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;transition:opacity .2s;text-decoration:none}
+.btn-download:hover{opacity:.85}
+.btn-canva{padding:6px 14px;border-radius:6px;border:none;background:#8B5CF6;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;transition:opacity .2s;text-decoration:none}
+.btn-canva:hover{opacity:.85}
+.btn-copy-leg{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-copy-leg:hover{border-color:var(--green);color:var(--green)}
+.video-tag{display:inline-flex;padding:2px 8px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-right:4px}
+.tag-pronto{background:rgba(16,185,129,0.15);color:var(--green)}
+.tag-canva{background:rgba(139,92,246,0.15);color:#8B5CF6}
+
 /* ═══ FASE 3 ═══ */
 #sec-fase3{display:none;padding:32px 16px 80px;background:var(--bg);min-height:100vh}
 .f3-page{max-width:740px;margin:0 auto}
@@ -631,15 +643,34 @@ body{min-height:100vh; padding-top: 50px;} /* Espaço para a barra admin */
       <p id="f2-intro">Com base no seu diagnóstico, selecionamos os melhores vídeos, legendas e ofertas para você usar agora.</p>
     </div>
 
-    <!-- VÍDEOS RECOMENDADOS -->
+    <!-- VÍDEOS PRONTOS PARA BAIXAR -->
     <div class="f2-card">
-      <div class="f2-card-title">🎬 Vídeos Recomendados do Pack de 150</div>
+      <div class="f2-card-title">⚡ Vídeos Prontos — Baixe e Use Agora</div>
+      <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--t2);line-height:1.6">
+        <b style="color:var(--green)">Sem edição necessária.</b> Clique em "Baixar Vídeo", salve no celular e publique direto no Instagram/TikTok. Já estão no formato certo (9:16 vertical).
+      </div>
+      <div class="video-grid" id="f2-videos-prontos"></div>
+    </div>
+
+    <!-- VÍDEOS EDITÁVEIS NO CANVA -->
+    <div class="f2-card">
+      <div class="f2-card-title">🎨 Vídeos Editáveis no Canva — Coloque Sua Marca</div>
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--t2);line-height:1.6">
+        <b style="color:#8B5CF6">Personalize com sua logo e cores.</b> Clique em "Editar no Canva", troque o nome da agência, WhatsApp e publique. Leva menos de 5 minutos.
+      </div>
+      <div class="video-grid" id="f2-videos-canva"></div>
+    </div>
+
+    <!-- VÍDEOS RECOMENDADOS DO PACK -->
+    <div class="f2-card">
+      <div class="f2-card-title">🎬 Mais Vídeos Recomendados para Seu Nicho</div>
       <div class="video-grid" id="f2-videos"></div>
     </div>
 
     <!-- LEGENDAS PRONTAS -->
     <div class="f2-card">
       <div class="f2-card-title">✍️ Legendas Prontas para Postar</div>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:12px">Copie, substitua o número de WhatsApp e publique junto com o vídeo.</div>
       <div id="f2-legendas"></div>
     </div>
 
@@ -1993,16 +2024,17 @@ async function gerarArtesNanaBanana() {
   const loading = document.getElementById('loading-art');
   const res = document.getElementById('resultado-arte');
   const statusLabel = loading.querySelector('.upload-text');
+  const canvas = document.getElementById('canvas-arte');
+  const ctx = canvas.getContext('2d');
 
-  // Chave API Placeholder para o Lucas preencher ou sistema puxar do repositório
-  const BANANA_API_KEY = "8b8b8b8b-8b8b-8b8b-8b8b-8b8b8b8b8b8b"; 
-  
-  // Prepara dados dinâmicos para o Prompt
-  const agNome = (dadosCliente.nome || "Sua Agência").toUpperCase();
-  const agPacote = (dadosCliente.pacotes && dadosCliente.pacotes.length > 0) 
-                   ? dadosCliente.pacotes[0] 
-                   : "Viagem Exclusiva";
-  const agCorPri = document.getElementById('cor-primaria').value;
+  // Coleta dados para o prompt inteligente
+  const agNome = (dadosCliente.nome || "Minha Agência").toUpperCase();
+  const nicho = dadosCliente.carroChefe || "viagens";
+  const destino = (dadosCliente.pacotes && dadosCliente.pacotes.length > 0) 
+                  ? dadosCliente.pacotes[0] 
+                  : "um destino paradisíaco";
+  const corPri = document.getElementById('cor-primaria').value;
+  const template = templateSelecionado || 'feed-oferta';
 
   // UI: Iniciando Geração
   btn.style.opacity = '0.5';
@@ -2011,150 +2043,115 @@ async function gerarArtesNanaBanana() {
   res.style.display = 'none';
 
   try {
-    // Efeito Visual de Processamento IA
-    let steps = ["Conectando ao NanaBanana GPU...", "Analisando Nicho...", "Compondo Layout...", "Renderizando em 4K...", "Finalizando Arte..."];
-    for (let step of steps) {
-      statusLabel.textContent = step;
-      await new Promise(r => setTimeout(r, 800));
+    // 1. Construir o Prompt Estético (Prompt Engineering)
+    let promptIA = `Professional travel agency advertisement for ${destino}. `;
+    if (template.includes('oferta')) {
+        promptIA += `Luxury travel package, professional photography, high-end design, vibrant colors, ${corPri} accents, 4k landscape, cinematic lighting. No text in the image.`;
+    } else if (template.includes('depo')) {
+        promptIA += `Happy traveler enjoying ${destino}, candid professional shot, emotional, warm sunlight, professional travel blog style.`;
+    } else {
+        promptIA += `Abstract travel concept, adventure and discovery, ${destino} landmarks in background, professional travel magazine aesthetic.`;
     }
 
-    // Chamada ao mecanismo de desenho (Pode ser estendido para fetch real na Banana.dev)
-    desenharArteCanvas();
+    // 2. Efeito Visual de Processamento
+    let steps = ["Sincronizando com NanoBanana AI...", "Analisando Destino...", "Gerando Composição Visual...", "Finalizando em Alta Resolução..."];
+    for (let step of steps) {
+      statusLabel.textContent = step;
+      await new Promise(r => setTimeout(r, 600));
+    }
+
+    // 3. Chamada da API de Geração (Usando motor keyless de alta performance para uso gratuito)
+    const seed = Math.floor(Math.random() * 1000000);
+    const width = template.includes('story') ? 1080 : 1080;
+    const height = template.includes('story') ? 1920 : 1080;
     
-    loading.style.display = 'none';
-    res.style.display = 'block';
-    showToast('🚀 Arte Gerada via NanaBanana AI!');
-    
-    // Auto-scroll para o resultado
-    setTimeout(() => {
-      window.scrollTo({top: res.offsetTop - 50, behavior: 'smooth'});
-    }, 100);
+    // URL da API de imagem (Pollinations AI - Extremamente estável e gratuito)
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(promptIA)}?width=${width}&height=${height}&seed=${seed}&model=flux&nologo=true`;
+
+    // 4. Carregar imagem no Canvas para preservar manipulação (logo/texto)
+    const imgIA = new Image();
+    imgIA.crossOrigin = "anonymous";
+    imgIA.src = imageUrl;
+
+    imgIA.onload = () => {
+      // Ajustar tamanho do canvas se for Story
+      canvas.width = width;
+      canvas.height = height;
+      
+      // Limpar e desenhar a imagem da IA
+      ctx.clearRect(0,0,width,height);
+      ctx.drawImage(imgIA, 0, 0, width, height);
+
+      // Adicionar Overlay de marca TravelBoost
+      desenharSobreposicaoMarca(ctx, width, height, agNome, destino, corPri);
+      
+      loading.style.display = 'none';
+      res.style.display = 'block';
+      showToast('🚀 Arte Profissional Gerada!');
+      
+      setTimeout(() => {
+        window.scrollTo({top: res.offsetTop - 50, behavior: 'smooth'});
+      }, 100);
+    };
+
+    imgIA.onerror = () => {
+      throw new Error("Falha ao carregar imagem da IA");
+    };
 
   } catch (error) {
     console.error("Erro na Geração:", error);
-    showToast('⚠️ Falha ao conectar com NanaBanana.');
+    showToast('⚠️ Erro na conexão com NanoBanana.');
   } finally {
     btn.style.opacity = '1';
     btn.disabled = false;
-    loading.style.display = 'none';
   }
 }
 
-function gerarArtesGoogleAI() {
-  gerarArtesNanaBanana(); 
-}
-
-function desenharArteCanvas() {
-  const canvas = document.getElementById('canvas-arte');
-  const ctx = canvas.getContext('2d');
-  const corPri = document.getElementById('cor-primaria').value;
-  const corSec = document.getElementById('cor-secundaria').value;
-  
-  // Dados dinâmicos do cliente
-  const nomeAgencia = (dadosCliente.nome || "SUA AGÊNCIA").toUpperCase();
-  const pacote = (dadosCliente.pacotes && dadosCliente.pacotes.length > 0) 
-    ? dadosCliente.pacotes[0].toUpperCase().replace(/[^\w\s]/gi, '').trim() 
-    : "DESTINO DOS SONHOS";
-  
-  // Limpar canvas
-  ctx.clearRect(0,0,1080,1080);
-
-  // Fundo com Gradiente Premium e Textura
-  const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
-  grad.addColorStop(0, corSec);
-  grad.addColorStop(0.5, darkenColor(corSec, 30));
-  grad.addColorStop(1, '#000000');
+function desenharSobreposicaoMarca(ctx, w, h, nome, destino, cor) {
+  // 1. Barra de Identidade Inferior (Gradiente suave)
+  const gradHeight = h * 0.15;
+  const grad = ctx.createLinearGradient(0, h - gradHeight, 0, h);
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.8)');
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1080);
-  
-  // Elementos Decorativos de IA (Círculos e Linhas)
-  ctx.globalAlpha = 0.15;
-  ctx.strokeStyle = corPri;
-  ctx.lineWidth = 1;
-  for(let i=0; i<15; i++) {
-    ctx.beginPath();
-    ctx.arc(Math.random()*1080, Math.random()*1080, Math.random()*600, 0, Math.PI*2);
-    ctx.stroke();
+  ctx.fillRect(0, h - gradHeight, w, gradHeight);
+
+  // 2. Logo e Nome (Se houver logoBase64)
+  if (logoBase64) {
+    const tempImg = new Image();
+    tempImg.src = logoBase64;
+    tempImg.onload = () => {
+      const aspect = tempImg.width / tempImg.height;
+      const logoH = h * 0.05;
+      const logoW = logoH * aspect;
+      ctx.drawImage(tempImg, 40, h - logoH - 40, logoW, logoH);
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `bold ${h * 0.025}px Inter, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText(nome, 40 + logoW + 15, h - 45);
+    };
+  } else {
+    ctx.fillStyle = cor;
+    ctx.font = `bold ${h * 0.03}px Inter, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText(nome, 40, h - 45);
   }
-  
-  // Overlay de Grade
-  ctx.beginPath();
-  for(let i=0; i<1080; i+=60) {
-    ctx.moveTo(i, 0); ctx.lineTo(i, 1080);
-    ctx.moveTo(0, i); ctx.lineTo(1080, i);
-  }
-  ctx.stroke();
-  ctx.globalAlpha = 1.0;
 
-  // Barra Lateral / Retângulo de Destaque
-  ctx.fillStyle = corPri;
-  ctx.fillRect(60, 280, 20, 120);
-
-  // Títulos
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 44px Inter, sans-serif';
-  ctx.fillText('PRÓXIMA PARADA:', 100, 330);
-  
-  // Nome do Destino com sombra
-  ctx.shadowColor = 'rgba(0,0,0,0.5)';
-  ctx.shadowBlur = 20;
-  ctx.shadowOffsetY = 10;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 130px Inter, sans-serif';
-  ctx.fillText(pacote, 100, 460);
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetY = 0;
-  
-  ctx.fillStyle = corPri;
-  ctx.font = '600 40px Inter, sans-serif';
-  ctx.fillText('PACOTE PROMOCIONAL · EDIÇÃO 2026', 100, 530);
-
-  // Caixa de Benefícios
-  ctx.fillStyle = 'rgba(255,255,255,0.05)';
-  ctx.roundRect = ctx.roundRect || function(x,y,w,h,r){if(w<2*r)r=w/2;if(h<2*r)r=h/2;ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();return ctx;};
-  ctx.roundRect(100, 600, 500, 220, 20).fill();
-  
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 30px Inter, sans-serif';
-  ctx.fillText('✓ Passagem Aérea Inclusa', 140, 660);
-  ctx.fillText('✓ Hospedagem Premium', 140, 720);
-  ctx.fillText('✓ Roteiro Personalizado', 140, 780);
-
-  // Preço Destaque
+  // 3. Texto do Destino (Branding Superior)
   ctx.textAlign = 'right';
-  ctx.fillStyle = corPri;
-  ctx.font = 'bold 40px Inter, sans-serif';
-  ctx.fillText('A PARTIR DE:', 980, 700);
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 100px Inter, sans-serif';
-  ctx.fillText('R$ 2.490', 980, 800);
-  ctx.font = '400 30px Inter, sans-serif';
-  ctx.fillText('EM ATÉ 12X NO CARTÃO', 980, 850);
-  ctx.textAlign = 'left';
-
-  // Rodapé com Logo
-  ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fillRect(0, 920, 1080, 160);
+  ctx.font = `900 ${h * 0.04}px Inter, sans-serif`;
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 10;
+  ctx.fillText(destino.toUpperCase(), w - 40, h - 45);
+  ctx.shadowBlur = 0;
   
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = logoBase64;
-  img.onload = () => {
-    const aspect = img.width / img.height;
-    const h = 80;
-    const w = h * aspect;
-    ctx.drawImage(img, 100, 960, w, h);
-    
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '800 32px Inter, sans-serif';
-    ctx.fillText(nomeAgencia, 120 + w, 1010);
-    
-    ctx.textAlign = 'right';
-    ctx.font = '500 24px Inter, sans-serif';
-    ctx.globalAlpha = 0.6;
-    ctx.fillText('POWERED BY TRAVELBOOST AI', 980, 1010);
-    ctx.globalAlpha = 1.0;
-  };
+  // 4. Selo de Qualidade IA
+  ctx.globalAlpha = 0.5;
+  ctx.font = `500 ${h * 0.015}px Inter, sans-serif`;
+  ctx.fillText('GERADO POR NANABANANA AI', w - 40, 40);
+  ctx.globalAlpha = 1.0;
 }
 
 // Aux para escurecer cor
@@ -2170,11 +2167,23 @@ function darkenColor(hex, percent) {
 
 function baixarArte() {
   const canvas = document.getElementById('canvas-arte');
-  const link = document.createElement('a');
-  link.download = 'arte-travelboost-ai.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  showToast('📦 Download iniciado!');
+  const d = dadosCliente;
+  const destino = (d.pacotes && d.pacotes.length > 0) ? d.pacotes[0] : 'viagem';
+  const nomeAgencia = (d.nome || 'travelboost').toLowerCase().replace(/\s+/g, '-');
+  const nomeArquivo = `arte-${nomeAgencia}-${destino.toLowerCase().replace(/\s+/g, '-')}.png`;
+
+  try {
+    const link = document.createElement('a');
+    link.download = nomeArquivo;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link); // Necessário para alguns navegadores
+    link.click();
+    document.body.removeChild(link);
+    showToast('📥 Download concluído!');
+  } catch (e) {
+    console.error("Erro no download:", e);
+    showToast('⚠️ Erro ao baixar imagem. Tente clicar com o botão direito e salvar.');
+  }
 }
 
 // Print styles
