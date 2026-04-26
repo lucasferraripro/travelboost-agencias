@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../Desktop/agencias-viagem"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "agencias-viagem"
+	}
+}
