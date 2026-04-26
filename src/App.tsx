@@ -145,7 +145,6 @@ const App = () => (
                     <Route path="/diferencas" element={<Diferencas />} />
                     <Route path="/imersao-ao-vivo" element={<AulaSecreta />} />
                     <Route path="/fabrica" element={<Fabrica />} />
-                    <Route path="/fa" element={<Navigate to="/fabrica" replace />} />
                     <Route path="/painel-marketing" element={
                       <ProtectedRoute>
                         <PainelMarketing />
