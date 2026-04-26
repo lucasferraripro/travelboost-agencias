@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useTrackUtm } from "@/hooks/useTrackUtm";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Suspense, lazy } from "react";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
