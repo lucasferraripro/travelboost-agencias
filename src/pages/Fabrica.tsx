@@ -78,10 +78,10 @@ const FabricaInner = () => {
         <div className="text-center py-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] mb-4">
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: state.primaryColor }} />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Fábrica de Anúncios · IA</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Esteira</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black mb-3 tracking-tight leading-[1.1]">
-            Sua agência <span style={{ background: `linear-gradient(135deg, ${state.primaryColor}, #FCD34D)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>profissional</span><br className="hidden sm:block" /> em menos de 1 hora
+            Sua agência <span style={{ background: `linear-gradient(135deg, ${state.primaryColor}, #FCD34D)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>profissional</span><br className="hidden sm:block" /> em minutos
           </h1>
           <p className="text-sm text-white/60 max-w-lg mx-auto">
             Diagnóstico, anúncios prontos com IA e site no ar — tudo em 4 passos guiados, sem precisar de designer ou agência.
