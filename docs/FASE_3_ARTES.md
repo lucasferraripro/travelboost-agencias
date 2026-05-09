@@ -201,8 +201,18 @@ async function uploadLogo(file, clienteId) {
 
 ## Cores do Cliente
 
-### Coleta de Cores
-O sistema coleta as cores do cliente no formulário da Fase 4 (Site), mas também pode ser definido aqui:
+### 🎨 Modelos de Artes (Prompts Engenharia)
+
+O sistema utiliza 3 modelos mestres de prompts para gerar anúncios de alta conversão. Estes prompts são dinâmicos e adaptam-se às cores e destinos da agência:
+
+#### 1. Modelo: Painéis Divididos (Horizontal/Vertical)
+Focado em comparação visual e lista de destinos. Ideal para "Ofertas de Temporada".
+
+#### 2. Modelo: Alta Conversão (Texto Superior + Foto Inferior)
+Design limpo com foco em um destino principal e call-to-action clara.
+
+#### 3. Modelo: Layout Gráfico Profissional (Duas Colunas)
+Layout de revista/catálogo, com precisão técnica em espaçamento e tipografia.
 
 ```html
 <div class="field">
