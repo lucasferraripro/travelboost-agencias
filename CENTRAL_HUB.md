@@ -77,6 +77,7 @@
 | Skill | O que faz | Quando usar |
 |-------|-----------|-------------|
 | `/canvaviagem_orquestrador` | Diagnóstico diário completo do negócio | **Todo dia pela manhã — ponto de entrada** |
+| `/super-dev-team` | **Orquestrador do Super Time de Engenharia** | Executar correções de bugs, desenvolver telas e blinder Supabase |
 | `/canvaviagem_ceo` | Decisões estratégicas, aprovações, visão mensal | Decisões importantes, revisão mensal |
 | `/canvaviagem_cmo` | Estratégia de marketing, plano do mês | Planejar campanhas, coordenar conteúdo |
 | `/canvaviagem_ganancia` | Análise de oportunidades de receita imediata | Quando quiser crescer receita rápido |

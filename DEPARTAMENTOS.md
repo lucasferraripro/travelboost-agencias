@@ -568,6 +568,7 @@ npx goose-skills install review-scraper
 
 ```
 .agents/skills/
+├── super-dev-team.md           ← Orquestrador do Super Time de Engenharia (Novo)
 ├── dept-design/                ← 8 agentes de design (agency-agents)
 │   ├── SKILL.md               ← Orquestrador do departamento
 │   ├── design-brand-guardian.md
